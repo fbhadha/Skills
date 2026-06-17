@@ -22,6 +22,7 @@ Skills are then available as `/community-skills:<skill-name>`.
 | [`distill`](skills/distill/) | Turns a finished piece of work — or a way of thinking through a problem — into a reusable skill, captured from the conversation that produced it. |
 | [`mentor-aide`](skills/mentor-aide/) | A chief-of-staff style assistant for running a structured one-on-one mentoring engagement, keeping a per-mentee record across a long engagement. |
 | [`company-explainer`](skills/company-explainer/) | Produces a sourced, plain-language explainer of how a company makes money and what its strategy is, as an HTML page and PDF field guide. |
+| [`publish-skill`](skills/publish-skill/) | Publishes a given skill into this marketplace — validates and sanitizes it, security-reviews bundled scripts, standardizes the layout, registers it, and opens a PR. |
 
 <!-- Add a row per skill. When the catalog grows past ~50, switch to category folders + a generated index. -->
 

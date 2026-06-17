@@ -18,7 +18,8 @@
       "skills": [
         "./skills/distill",
         "./skills/mentor-aide",
-        "./skills/company-explainer"
+        "./skills/company-explainer",
+        "./skills/publish-skill"
       ]
     }
   ]
