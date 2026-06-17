@@ -12,11 +12,12 @@ You have three jobs. Capture is the main one: extract the method from the conver
 
 ## What you are building
 
-Every skill you write is a small folder that stands on its own:
+Every skill you write is a small folder that stands on its own, laid out the way the Agent Skills standard sets out, so it installs anywhere and is fit to share. That standard gives a skill `SKILL.md` at the root plus three optional folders: `scripts/` for code the skill runs, `references/` for material it reads, and `assets/` for files it builds output from. Use those names exactly, since they are the spec and what other tools and the marketplace expect. What you put in each:
 
 - `SKILL.md` with frontmatter and an executable body. The frontmatter carries a `metadata` block with one field, `distilled: true`, which marks this as a skill distill made so groom mode can tell it from the user's hand-made skills and the ones Anthropic ships. Keep it under `metadata`, since a bare top-level key fails packaging. Distill does not stamp dates. The file's own modification time carries the recency groom needs, and it survives install. The body is a machine spec, dense and free of rationale, so a small local model can run it the same way every time. Use the machine-spec skill to write and audit this body. The conversational triggers and the apply protocol live in the body too, as the first steps.
-- `reference/provenance.md`, the memory layer. This is where the quotes, the reasoning, and the branches that were tried and dropped go. A capable model reads this at apply time to show its work. A small model ignores it. Keep all the "why" here and none of it in the body.
+- `references/provenance.md`, the memory layer. This is where the quotes, the reasoning, and the branches that were tried and dropped go. A capable model reads this at apply time to show its work. A small model ignores it. Keep all the "why" here and none of it in the body.
 - An output template, only when the original produced a structured artifact like an HTML page or a deck. Strip it of the user's content and keep the skeleton: the variables, how the sections are organized, what each section and element is for, the layout and styling pattern. Put it in `assets/` and point the body at it.
+- Runnable code, only when the capture came from a coding session and the user wants the working code kept, not just the steps that built it. A conversation about building or fixing code often leaves behind a script the user would want to run again rather than rebuild from a description. Save that code in `scripts/`, the spec folder for executable helpers, and point the body at it by filename so the skill runs the script instead of pasting the code into context. Keep the body's steps as the method and let the script carry the part that is better run than retyped. Ask before you keep it, since not every code chat is worth a saved script. The interview step below covers when to ask.
 
 A capture that produced no file, like a way of thinking through a decision, still gets the first two. The thinking pattern is the method. It is worth keeping on its own.
 
@@ -42,7 +43,7 @@ Read the whole conversation and pull out the method. You are after the path that
 - The output template, if there is a structured artifact. See the template rules above.
 - The provenance, the supporting quotes and the reasoning behind the key calls, for recall later. This is the memory layer, not the executable.
 
-The full extraction schema, the rubric for what survives the prune, and a worked example are in `reference/extraction-guide.md`. Read it before your first capture.
+The full extraction schema, the rubric for what survives the prune, and a worked example are in `references/extraction-guide.md`. Read it before your first capture.
 
 ### Generalize and interview
 
@@ -53,6 +54,9 @@ For anything below that bar, ask the user. And ask regardless: every capture inc
 - Is this element specific to this situation, or do you want it generalized so it carries to another company or topic?
 - Was this a fixed step, or a branch where you would want a choice next time?
 - In the template, what do you want kept and what do you want stripped?
+- When the capture came from code work: do you want the working code saved as a script the skill can run, or just the steps that built it? If they want it kept, ask which files, and whether anything in them needs to turn into a variable, like a path, a key, or a project name, so the script runs somewhere else later.
+
+The code question only comes up when the conversation actually produced runnable code the user might rerun. Skip it for a chat that was about code but left no script worth keeping, like talking through an approach or reviewing someone else's file. When you do keep code, save it under `scripts/` as set out above.
 
 Ask one question at a time where the interface allows it. Keep the set tight. The point is to catch the edge cases the automatic pass cannot judge, not to interrogate.
 
@@ -90,10 +94,10 @@ A different kind of give-back. The user takes what a skill drafted, finishes it 
 
 Handle it like this.
 
-- Save the artifact as its own file in the skill's examples folder, reference/examples/, and create the folder if it is not there yet. Name the file dated and slugged, like reference/examples/2026-06-17-a-skill-that-writes-skills.md, so the set stays easy to read.
+- Save the artifact as its own file in the skill's examples folder, references/examples/, and create the folder if it is not there yet. Name the file dated and slugged, like references/examples/2026-06-17-a-skill-that-writes-skills.md, so the set stays easy to read.
 - Keep the user's words exactly. This is the gold target the skill is trying to match, so do not rewrite or tidy it. Strip only what is private and the user would not want stored, and ask first if you are unsure. Work that is already published, like a live post, needs none of that.
 - Capture the pair when you have it. If the conversation holds the topic or the rough take that produced the piece, put it in a short header above the finished text, with the dimension calls where they are known, so the example shows the input and the final together. A take paired with its finished version teaches the move, where a bare output only shows the destination. When no take is in reach, save the finished piece with a one-line note of its topic.
-- Point the skill at the folder if it does not already read it. Add a line to wherever the skill keeps its examples, the playbook or the body, telling it to read reference/examples/ and treat those as the strongest targets.
+- Point the skill at the folder if it does not already read it. Add a line to wherever the skill keeps its examples, the playbook or the body, telling it to read references/examples/ and treat those as the strongest targets.
 - Cap the folder, do not let it grow without end. Keep only the most recent few, say five, plus any the user has pinned as gold. When a new one pushes an older past the cap, drop the oldest and say in a line which one left, so the user can pin it if it was a keeper. Gold examples never count toward the cap and never get evicted. Recency is the point: the newest posts are the closest to how the user writes now. An old one that still nails it gets kept by pinning it gold, which keeps the folder small either way. For work that lives somewhere else already, like a published post, a dropped example is no loss, since it can be fed again.
 - Run the frontmatter gate and the packaging the same as the other paths before you present.
 
@@ -121,7 +125,7 @@ You cannot delete a skill from the user's account yourself. In a persistent loca
 
 Apply is what a distilled skill does when it triggers later. You do not run it. You write it into the skill so it runs on its own. Build it in as the first steps of the executable body, so it survives on a small model too:
 
-1. Surface the dimensions as choices. If `reference/provenance.md` can be read, show the call that was made last time and one supporting quote for each dimension, so the user sees the evidence behind the path and not just the path. A small model that cannot read the provenance simply asks the dimension plainly.
+1. Surface the dimensions as choices. If `references/provenance.md` can be read, show the call that was made last time and one supporting quote for each dimension, so the user sees the evidence behind the path and not just the path. A small model that cannot read the provenance simply asks the dimension plainly.
 2. Offer the user the choice to follow that path or adjust it. Let them pick their own way through. Do not march them down a fixed line.
 3. Then produce the output, using the template if there is one.
 
@@ -145,6 +149,6 @@ When you cannot reach the validator, on a small model or in a chat with no code 
 
 ## Reference
 
-- `reference/extraction-guide.md`: the full extraction schema, the prune rubric for what survives, the generalization decision rubric, how to generate the interview questions, and a worked capture from a real conversation.
+- `references/extraction-guide.md`: the full extraction schema, the prune rubric for what survives, the generalization decision rubric, how to generate the interview questions, and a worked capture from a real conversation.
 - `assets/distilled-skill.md`: the literal format for a distilled skill's SKILL.md, with the apply protocol and machine-spec body built in.
 - `assets/provenance.md`: the literal format for the provenance file, the memory layer with the quotes and the reasoning.
