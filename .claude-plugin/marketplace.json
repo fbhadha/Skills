@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "community-skills",
+  "owner": {
+    "name": "Firdaush Bhadha",
+    "email": "firdaush@bhadha.ca"
+  },
+  "metadata": {
+    "description": "A curated, security-vetted marketplace of community-contributed Agent Skills for Claude. Claude-first, written to stay portable across LLMs.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "community-skills",
+      "description": "Community-contributed skills for Claude. See README for the catalog.",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/distill"
+      ]
+    }
+  ]
+}

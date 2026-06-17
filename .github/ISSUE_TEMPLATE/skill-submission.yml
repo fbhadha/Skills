@@ -1,0 +1,34 @@
+name: Skill submission or request
+description: Propose a new skill, or request one you'd like to see
+title: "[skill] <short name>"
+labels: ["to-triage", "skill"]
+body:
+  - type: input
+    id: skill-name
+    attributes:
+      label: Skill name
+      description: Lowercase, hyphenated, no 'anthropic'/'claude'.
+      placeholder: weekly-review
+    validations:
+      required: true
+  - type: textarea
+    id: what-when
+    attributes:
+      label: What it does and when to use it
+      description: This becomes the basis for the skill's description.
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - I want to contribute this skill myself
+        - I'm requesting someone build it
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Prior art, links, portability considerations.

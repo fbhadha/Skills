@@ -1,0 +1,13 @@
+# Code owners are auto-requested for review on matching paths.
+# Enable "Require review from Code Owners" in branch protection to enforce.
+# Replace @fbhadha with a maintainer team (e.g. @your-org/maintainers) as the project grows.
+
+# Global fallback — every change needs a maintainer review.
+*                       @fbhadha
+
+# Repo plumbing: stricter ownership.
+/.github/               @fbhadha
+/.claude-plugin/        @fbhadha
+/schema/                @fbhadha
+/scripts/               @fbhadha
+/CODEOWNERS             @fbhadha

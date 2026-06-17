@@ -1,0 +1,46 @@
+name: Validate skills
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+      - "schema/**"
+      - "scripts/validate_skills.py"
+      - ".claude-plugin/**"
+  push:
+    branches: [main]
+
+jobs:
+  validate-frontmatter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validator deps
+        run: pip install pyyaml jsonschema
+      - name: Validate SKILL.md frontmatter
+        run: python scripts/validate_skills.py
+
+  validate-marketplace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Marketplace JSON is well-formed
+        run: python -c "import json,sys; json.load(open('.claude-plugin/marketplace.json')); print('marketplace.json OK')"
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Flag risky patterns in bundled scripts
+        run: |
+          echo "Scanning skills/ for high-risk shell patterns (advisory)."
+          # Advisory grep: surfaces patterns reviewers must eyeball. Non-blocking by design.
+          ! grep -rIEn \
+            -e 'curl[^|]*\|[[:space:]]*(sh|bash)' \
+            -e 'wget[^|]*\|[[:space:]]*(sh|bash)' \
+            -e 'rm[[:space:]]+-rf[[:space:]]+/' \
+            -e 'eval[[:space:]]+.*\$\(' \
+            skills/ || (echo "::warning::Risky pattern found above — require manual security review." && true)
