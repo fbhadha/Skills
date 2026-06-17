@@ -16,7 +16,9 @@
       "source": "./",
       "strict": false,
       "skills": [
-        "./skills/distill"
+        "./skills/distill",
+        "./skills/mentor-aide",
+        "./skills/company-explainer"
       ]
     }
   ]
