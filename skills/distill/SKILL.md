@@ -15,7 +15,7 @@ You have three jobs. Capture is the main one: extract the method from the conver
 Every skill you write is a small folder that stands on its own:
 
 - `SKILL.md` with frontmatter and an executable body. The frontmatter carries a `metadata` block with one field, `distilled: true`, which marks this as a skill distill made so groom mode can tell it from the user's hand-made skills and the ones Anthropic ships. Keep it under `metadata`, since a bare top-level key fails packaging. Distill does not stamp dates. The file's own modification time carries the recency groom needs, and it survives install. The body is a machine spec, dense and free of rationale, so a small local model can run it the same way every time. Use the machine-spec skill to write and audit this body. The conversational triggers and the apply protocol live in the body too, as the first steps.
-- `references/provenance.md`, the memory layer. This is where the quotes, the reasoning, and the branches that were tried and dropped go. A capable model reads this at apply time to show its work. A small model ignores it. Keep all the "why" here and none of it in the body.
+- `reference/provenance.md`, the memory layer. This is where the quotes, the reasoning, and the branches that were tried and dropped go. A capable model reads this at apply time to show its work. A small model ignores it. Keep all the "why" here and none of it in the body.
 - An output template, only when the original produced a structured artifact like an HTML page or a deck. Strip it of the user's content and keep the skeleton: the variables, how the sections are organized, what each section and element is for, the layout and styling pattern. Put it in `assets/` and point the body at it.
 
 A capture that produced no file, like a way of thinking through a decision, still gets the first two. The thinking pattern is the method. It is worth keeping on its own.
@@ -42,7 +42,7 @@ Read the whole conversation and pull out the method. You are after the path that
 - The output template, if there is a structured artifact. See the template rules above.
 - The provenance, the supporting quotes and the reasoning behind the key calls, for recall later. This is the memory layer, not the executable.
 
-The full extraction schema, the rubric for what survives the prune, and a worked example are in `references/extraction-guide.md`. Read it before your first capture.
+The full extraction schema, the rubric for what survives the prune, and a worked example are in `reference/extraction-guide.md`. Read it before your first capture.
 
 ### Generalize and interview
 
@@ -58,7 +58,7 @@ Ask one question at a time where the interface allows it. Keep the set tight. Th
 
 ### Write
 
-Write the new skill in the format under "What you are building." Use `templates/distilled-skill.md` for the SKILL.md and `templates/provenance.md` for the provenance file. Stamp the frontmatter `metadata` block with one field, `distilled: true`, so groom mode can recognize it later. Write the executable body with the machine-spec skill so it passes that skill's audit and runs on a small model. Save the folder to the outputs directory and present it so the user can drop it into their skills directory. Name the folder for the method, in lower case with dashes. Before you present, run the frontmatter gate below, validator first, and fix whatever it flags. Once it passes, package the folder with skill-creator's package_skill.py and hand over the .skill, so the user gets the finished artifact and not a folder to assemble by hand. Where skill-creator or code execution is out of reach, present the folder instead.
+Write the new skill in the format under "What you are building." Use `assets/distilled-skill.md` for the SKILL.md and `assets/provenance.md` for the provenance file. Stamp the frontmatter `metadata` block with one field, `distilled: true`, so groom mode can recognize it later. Write the executable body with the machine-spec skill so it passes that skill's audit and runs on a small model. Save the folder to the outputs directory and present it so the user can drop it into their skills directory. Name the folder for the method, in lower case with dashes. Before you present, run the frontmatter gate below, validator first, and fix whatever it flags. Once it passes, package the folder with skill-creator's package_skill.py and hand over the .skill, so the user gets the finished artifact and not a folder to assemble by hand. Where skill-creator or code execution is out of reach, present the folder instead.
 
 Then offer to leave a note in memory so the skill gets found later. Ask first, every time, and write it only on a yes. Keep it a fact and not a command: record that the user has this skill and likes the matching one surfaced when a task fits, rather than a standing order to push it. The soft wording is on purpose. Memory is meant to hold facts and preferences, not verbatim behavioral commands, and a skill already triggers on its own description, so the note is a backup against under-triggering and not the main switch. Use the memory edits tool to write it, and only where memory is on, a hosted session with memory enabled, not incognito and not a local setup.
 
@@ -90,10 +90,10 @@ A different kind of give-back. The user takes what a skill drafted, finishes it 
 
 Handle it like this.
 
-- Save the artifact as its own file in the skill's examples folder, references/examples/, and create the folder if it is not there yet. Name the file dated and slugged, like references/examples/2026-06-17-a-skill-that-writes-skills.md, so the set stays easy to read.
+- Save the artifact as its own file in the skill's examples folder, reference/examples/, and create the folder if it is not there yet. Name the file dated and slugged, like reference/examples/2026-06-17-a-skill-that-writes-skills.md, so the set stays easy to read.
 - Keep the user's words exactly. This is the gold target the skill is trying to match, so do not rewrite or tidy it. Strip only what is private and the user would not want stored, and ask first if you are unsure. Work that is already published, like a live post, needs none of that.
 - Capture the pair when you have it. If the conversation holds the topic or the rough take that produced the piece, put it in a short header above the finished text, with the dimension calls where they are known, so the example shows the input and the final together. A take paired with its finished version teaches the move, where a bare output only shows the destination. When no take is in reach, save the finished piece with a one-line note of its topic.
-- Point the skill at the folder if it does not already read it. Add a line to wherever the skill keeps its examples, the playbook or the body, telling it to read references/examples/ and treat those as the strongest targets.
+- Point the skill at the folder if it does not already read it. Add a line to wherever the skill keeps its examples, the playbook or the body, telling it to read reference/examples/ and treat those as the strongest targets.
 - Cap the folder, do not let it grow without end. Keep only the most recent few, say five, plus any the user has pinned as gold. When a new one pushes an older past the cap, drop the oldest and say in a line which one left, so the user can pin it if it was a keeper. Gold examples never count toward the cap and never get evicted. Recency is the point: the newest posts are the closest to how the user writes now. An old one that still nails it gets kept by pinning it gold, which keeps the folder small either way. For work that lives somewhere else already, like a published post, a dropped example is no loss, since it can be fed again.
 - Run the frontmatter gate and the packaging the same as the other paths before you present.
 
@@ -121,7 +121,7 @@ You cannot delete a skill from the user's account yourself. In a persistent loca
 
 Apply is what a distilled skill does when it triggers later. You do not run it. You write it into the skill so it runs on its own. Build it in as the first steps of the executable body, so it survives on a small model too:
 
-1. Surface the dimensions as choices. If `references/provenance.md` can be read, show the call that was made last time and one supporting quote for each dimension, so the user sees the evidence behind the path and not just the path. A small model that cannot read the provenance simply asks the dimension plainly.
+1. Surface the dimensions as choices. If `reference/provenance.md` can be read, show the call that was made last time and one supporting quote for each dimension, so the user sees the evidence behind the path and not just the path. A small model that cannot read the provenance simply asks the dimension plainly.
 2. Offer the user the choice to follow that path or adjust it. Let them pick their own way through. Do not march them down a fixed line.
 3. Then produce the output, using the template if there is one.
 
@@ -145,6 +145,6 @@ When you cannot reach the validator, on a small model or in a chat with no code 
 
 ## Reference
 
-- `references/extraction-guide.md`: the full extraction schema, the prune rubric for what survives, the generalization decision rubric, how to generate the interview questions, and a worked capture from a real conversation.
-- `templates/distilled-skill.md`: the literal format for a distilled skill's SKILL.md, with the apply protocol and machine-spec body built in.
-- `templates/provenance.md`: the literal format for the provenance file, the memory layer with the quotes and the reasoning.
+- `reference/extraction-guide.md`: the full extraction schema, the prune rubric for what survives, the generalization decision rubric, how to generate the interview questions, and a worked capture from a real conversation.
+- `assets/distilled-skill.md`: the literal format for a distilled skill's SKILL.md, with the apply protocol and machine-spec body built in.
+- `assets/provenance.md`: the literal format for the provenance file, the memory layer with the quotes and the reasoning.

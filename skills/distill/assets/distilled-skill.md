@@ -35,7 +35,7 @@ request: <the user's new task in this domain>
 <the literal target. for a structured artifact, paste the skeleton or point at assets/<file>. for prose, describe the shape and the gates it must pass.>
 
 ## STEPS
-1. Present each DIMENSIONS choice to the user. IF references/provenance.md is readable THEN show the call made last time and one supporting quote for each dimension. Ask the user to keep that path or adjust it.
+1. Present each DIMENSIONS choice to the user. IF reference/provenance.md is readable THEN show the call made last time and one supporting quote for each dimension. Ask the user to keep that path or adjust it.
 2. Set each dimension from the user's answer.
 3. <first method step. atomic. one action.>
    IF <dimension condition> THEN <action> ELSE <action>
@@ -87,7 +87,7 @@ length: short | thorough
 A blog post in prose. Opening that earns the read in the first two lines. Body that holds one clear argument. No filler. Sounds like the user, not like a model.
 
 ## STEPS
-1. Present the tone and length choices. IF references/provenance.md is readable THEN show that informal and short were the calls last time and the one-line reason for each. Ask the user to keep that or adjust.
+1. Present the tone and length choices. IF reference/provenance.md is readable THEN show that informal and short were the calls last time and the one-line reason for each. Ask the user to keep that or adjust.
 2. Set tone and length from the answer.
 3. Draft the post at the chosen tone and length from the user's take.
 4. Cut every line that reads as filler.
