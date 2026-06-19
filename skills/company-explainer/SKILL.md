@@ -41,7 +41,7 @@ An HTML file built from assets/field-guide-template.html, plus a PDF rendered fr
 
 ## RULES
 - Write at a grade 10 reading level.
-- Write in Canadian English.
+- Write in the user's English variant (ask if unknown, default to US English).
 - Replace every em or en dash with a comma, a colon, or parentheses.
 - Define every specialist term in plain words at first use and in the glossary.
 - Trace every factual claim to a primary document read end to end.
@@ -71,5 +71,5 @@ OUTPUT:
 - [ ] one throughline holds across the whole piece
 - [ ] a customer, a shareholder, and an employee each read it the same way
 - [ ] the piece opens with a two-sentence takeaway box
-- [ ] Canadian English with no em or en dashes
+- [ ] the user's English variant with no em or en dashes
 - [ ] the output is built from the field-guide template structure

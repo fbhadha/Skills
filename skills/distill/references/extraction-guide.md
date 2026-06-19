@@ -14,7 +14,7 @@ A capture pulls seven things out of the conversation. The first six feed the exe
 
 4. **Quality gates.** The standards the user applied to judge good from bad. Capture the standard, never the rejected attempt. "Read for whether a busy reader would skim it" is a gate. "The third draft was too long" is not, it is a dead end. Gates become RULES and CHECK items.
 
-5. **Guardrails.** Hard rules the user set out loud. "No company names." "Keep it under two pages." "Canadian spelling." These become RULES, written in positive form.
+5. **Guardrails.** Hard rules the user set out loud. "No company names." "Keep it under two pages." "Match my spelling variant." These become RULES, written in positive form.
 
 6. **Output template.** Only when the original produced a structured artifact. Capture the skeleton, stripped of the user's content: the variables, how the sections are organized, what each section and element is for, the layout and styling pattern. For an HTML or CSS artifact that means the section structure, the named variables or tokens, the grid or layout approach, and a one-line note on what each block does. This becomes an asset the body points at, plus an OUTPUT contract.
 
@@ -74,7 +74,7 @@ A short illustration. The user spent a long conversation with Claude writing a b
 
 **Quality gates.** Read for whether a busy reader would skim it. Read for whether it sounds like the user and not like a model. Both become CHECK items.
 
-**Guardrails.** Canadian spelling. No em dashes. No invented jargon.
+**Guardrails.** Match my spelling variant. No em dashes. No invented jargon.
 
 **Output template.** None here, since a blog post is prose. If the same user later built an HTML field guide, that capture would carry the section skeleton and the design tokens as an asset.
 

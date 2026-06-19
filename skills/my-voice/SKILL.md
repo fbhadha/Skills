@@ -42,8 +42,8 @@ Examples:
 - No em or en dashes.
 - Use no invented jargon.
 - Open formal pieces with a person or a specific.
-- Canadian spelling variant (colour, -ize, -our).
-- Confidence ratio: boosters (literally, always, CAPS) slightly outnumber hedges (probably, might).
+- A consistent spelling variant (US, UK, Canadian, or Australian).
+- Confidence ratio: state whether boosters or hedges dominate, and by how much.
 -->
 
 ## Hard rules

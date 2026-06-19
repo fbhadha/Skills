@@ -95,7 +95,7 @@ A blog post in prose. Opening that earns the read in the first two lines. Body t
 6. Run CHECK before presenting.
 
 ## RULES
-- Use Canadian spelling.
+- Use the user's spelling variant.
 - Use no em or en dashes.
 - Use no invented jargon.
 - Hold to one argument across the post.
@@ -104,11 +104,11 @@ A blog post in prose. Opening that earns the read in the first two lines. Body t
 INPUT:
 topic: why most AI rollouts at work stall, take: it's never the tech, it's that nobody owns the change
 OUTPUT:
-<a short informal post that opens on the ownership point, holds that one argument, and closes on it, in Canadian spelling with no dashes>
+<a short informal post that opens on the ownership point, holds that one argument, and closes on it, in the user's spelling variant with no dashes>
 
 ## CHECK
 - [ ] a busy reader would not skim it
 - [ ] it sounds like the user, not a model
-- [ ] Canadian spelling, no em or en dashes
+- [ ] the user's spelling variant, no em or en dashes
 - [ ] one argument held across the whole post
 ```
