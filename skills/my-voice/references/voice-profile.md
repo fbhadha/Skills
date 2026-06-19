@@ -13,7 +13,7 @@ analysis_notes: <tools or method used, or "estimated by hand from N samples">
 
 <constraints>
 <!-- Run your corpus through a readability tool (textstat, etc.) or estimate from samples. -->
-reading_level: <Flesch-Kincaid grade, e.g. 8-9 ceiling>
+reading_level: <Flesch-Kincaid grade ceiling for your writing>
 sentence_length_avg: <average words per sentence>
 sentence_length_median: <median words per sentence>
 short_sentences_pct: <% under 10 words>
