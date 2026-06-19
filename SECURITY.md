@@ -6,7 +6,7 @@ Skills in this repo can include executable scripts that run on a user's machine.
 
 **Do not open a public issue for security problems.**
 
-Report privately via [GitHub Security Advisories](https://github.com/fbhadha/Skills/security/advisories/new), or email firdaush@bhadha.ca.
+Report privately via [GitHub Security Advisories](https://github.com/fbhadha/Skills/security/advisories/new).
 
 Please include:
 

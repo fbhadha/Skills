@@ -33,8 +33,8 @@ Examples of unacceptable behavior:
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the maintainers at firdaush@bhadha.ca. All complaints will be
-reviewed and investigated promptly and fairly.
+reported privately to the maintainers via [GitHub Security Advisories](https://github.com/fbhadha/Skills/security/advisories/new).
+All complaints will be reviewed and investigated promptly and fairly.
 
 ## Attribution
 

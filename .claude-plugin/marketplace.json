@@ -2,8 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "community-skills",
   "owner": {
-    "name": "Firdaush Bhadha",
-    "email": "firdaush@bhadha.ca"
+    "name": "Community Skills Maintainers"
   },
   "metadata": {
     "description": "A curated, security-vetted marketplace of community-contributed Agent Skills for Claude. Claude-first, written to stay portable across LLMs.",
