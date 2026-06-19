@@ -1,10 +1,10 @@
 # Curriculum map
 
-This is the what-to-teach-and-track reference. It maps the foundational knowledge and the workbook, lays out the phases for a jump-maker, and explains how to build a tailored program for an established TPM. The full text of both documents lives in the mentor's vault. Read them when you need depth.
+This is the what-to-teach-and-track reference. It maps the foundational ideas for TPM work, lays out the phases for a jump-maker, and explains how to build a tailored program for an established TPM. These ideas come from experience and practice across many TPM careers. Read deeper when you need grounding.
 
-## The handbook foundations
+## The foundational ideas
 
-The handbook "From technical to business" is your knowledge base, the ideas you reason from. You do not teach it in order. You pull the right idea when the moment calls for it. The fourteen ideas, in short:
+These fourteen ideas form the foundation for TPM work and the mentor-aide skill. They are not a course to march through. You pull the right idea when the moment calls for it, and you adapt them to how work actually looks at your company.
 
 1. Correct stops being the job. The move from being right to being trusted.
 2. Measure the outcome, not the output. Did a number that matters move, or did you just ship.
@@ -21,16 +21,19 @@ The handbook "From technical to business" is your knowledge base, the ideas you 
 13. Find the critical path. The handoffs and the one nobody is tracking.
 14. Carry a story, not a résumé. The thread that ties the stops together.
 
-## The workbook map
+## The work cycle and tracking
 
-The workbook is the toolbox the mentee fills and keeps. Use it to know where they are and what comes next.
+As a mentor, you help your mentee track several things. This is not a course outline but the shape of the real work:
 
-Part 1, before you have the title. The climb, building toward the role, and the making-the-move conversion. Open-ended.
-Part 2, your first 90 days. The landing once they hold the title. Three blocks, month by month.
-Part 3, after the transition. Running the role, and landing a new program fast.
-Part 4, tools you keep updating. Stakeholder map, ladder tracker, decision log, success measures, dependency and critical-path map.
-Part 5, playbooks for the hard moments. Before an update, before a meeting, saying no, when a project slips, before committing to a date, when everything is urgent.
-Part 6, the career thread.
+Before the title. The climb, building toward the role, and the making-the-move conversion. Open-ended. Your mentee does TPM-shaped work in their current seat and builds evidence.
+
+Landing the role. Your first 90 days after they have the title. Time-paced. Three blocks: arrival and setup, first moves, and landing a win.
+
+Running the role. Steady state. The mentee is in the role and working on real problems.
+
+Tools and trackers. Stakeholder map, critical path, decision log, what comes next. These live in the mentee's file and stay live through the engagement.
+
+The hard moments. Saying no, when a project slips, when everything is urgent, when a decision blocks. These come up in real time; you coach them as they arrive.
 
 ## The phases for a jump-maker
 
@@ -54,4 +57,4 @@ Compose a tailored program file from the foundations. Skim what they already hav
 
 Keep it living. As new problems surface in sessions, fold them in. The program is organized by their problems and runs as long as it needs, so do not force the twelve-session shape onto it.
 
-Build any new material from the foundations and sound practice, and flag it for the mentor before it lands in a file. Never invent it from nowhere. When a new addition proves out and the mentor has vetted it, it can graduate into the workbook's "after the transition" section, so the library grows from real engagements and the next tailored program has more to draw on.
+Build any new material from the foundational ideas and sound practice grounded in your workplace. Flag it for the mentor before it lands in a file. Never invent it from nowhere. When a new addition proves out, the library grows and the next tailored program can draw on what you learned.
