@@ -19,7 +19,11 @@
         "./skills/distill",
         "./skills/mentor-aide",
         "./skills/company-explainer",
-        "./skills/publish-skill"
+        "./skills/publish-skill",
+        "./skills/my-voice",
+        "./skills/grill-me",
+        "./skills/writing-partner",
+        "./skills/linkedin-post"
       ]
     }
   ]

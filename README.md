@@ -20,9 +20,13 @@ Skills are then available as `/community-skills:<skill-name>`.
 | Skill | What it does |
 |-------|--------------|
 | [`distill`](skills/distill/) | Turns a finished piece of work — or a way of thinking through a problem — into a reusable skill, captured from the conversation that produced it. |
+| [`grill-me`](skills/grill-me/) | Interrogates a plan one question at a time, walking the decision tree until you and Claude reach genuine shared understanding, stress-testing choices and surfacing hidden assumptions. |
 | [`mentor-aide`](skills/mentor-aide/) | A chief-of-staff style assistant for running a structured one-on-one mentoring engagement, keeping a per-mentee record across a long engagement. |
 | [`company-explainer`](skills/company-explainer/) | Produces a sourced, plain-language explainer of how a company makes money and what its strategy is, as an HTML page and PDF field guide. |
 | [`publish-skill`](skills/publish-skill/) | Publishes a given skill into this marketplace — validates and sanitizes it, security-reviews bundled scripts, standardizes the layout, registers it, and opens a PR. |
+| [`my-voice`](skills/my-voice/) | Drafts, rewrites, edits, or voice-checks any writing by matching a specific writer's personal voice, corpus-based rules, and signature patterns while stripping AI tells. Ships with templates and a one-time onboarding to capture your voice. |
+| [`writing-partner`](skills/writing-partner/) | An opinionated developmental editor and brainstorm partner that pushes hard on throughline, momentum, and craft, holds its own judgment under pushback, and never overrides what you mean to say. |
+| [`linkedin-post`](skills/linkedin-post/) | Writes a publish-ready LinkedIn post in your voice, tuned to current LinkedIn norms, with a hook-first structure, an AI-tell pass, and per-topic hashtag research. |
 
 <!-- Add a row per skill. When the catalog grows past ~50, switch to category folders + a generated index. -->
 
