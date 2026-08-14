@@ -22,7 +22,8 @@
         "./skills/my-voice",
         "./skills/grill-me",
         "./skills/writing-partner",
-        "./skills/linkedin-post"
+        "./skills/linkedin-post",
+        "./skills/adversarial-review-engine"
       ]
     }
   ]

@@ -27,6 +27,7 @@ Skills are then available as `/community-skills:<skill-name>`.
 | [`my-voice`](skills/my-voice/) | Drafts, rewrites, edits, or voice-checks any writing by matching a specific writer's personal voice, corpus-based rules, and signature patterns while stripping AI tells. Ships with templates and a one-time onboarding to capture your voice. |
 | [`writing-partner`](skills/writing-partner/) | An opinionated developmental editor and brainstorm partner that pushes hard on throughline, momentum, and craft, holds its own judgment under pushback, and never overrides what you mean to say. |
 | [`linkedin-post`](skills/linkedin-post/) | Writes a publish-ready LinkedIn post in your voice, tuned to current LinkedIn norms, with a hook-first structure, an AI-tell pass, and per-topic hashtag research. |
+| [`adversarial-review-engine`](skills/adversarial-review-engine/) | Dismantles a piece of writing or argument as a hostile peer-reviewer and opposing counsel — verifying every claim, quote, and citation against primary sources, then delivering a severity-ranked Kill List, steelman counter-narrative, core-claim verdicts, and explicit concessions. |
 
 <!-- Add a row per skill. When the catalog grows past ~50, switch to category folders + a generated index. -->
 
