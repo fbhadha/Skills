@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate every skills/*/SKILL.md against the Agent Skills standard.
+"""Validate every SKILL.md (skills/ and plugins/*/skills/) against the Agent Skills standard.
 
 Checks, per skill:
   - SKILL.md exists and starts with YAML frontmatter
@@ -9,7 +9,7 @@ Checks, per skill:
 
 Exit code is non-zero if any skill fails, so CI can block the merge.
 
-Usage: python scripts/validate_skills.py [skills_dir]
+Usage: python scripts/validate_skills.py [skills_dir]  (default: skills/ and plugins/*/skills/)
 """
 from __future__ import annotations
 
@@ -29,7 +29,11 @@ except ImportError:
     sys.exit("jsonschema is required: pip install jsonschema")
 
 ROOT = Path(__file__).resolve().parent.parent
-SKILLS_DIR = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "skills"
+SKILLS_DIRS = (
+    [Path(sys.argv[1]).resolve()]
+    if len(sys.argv) > 1
+    else [ROOT / "skills", *sorted(ROOT.glob("plugins/*/skills"))]
+)
 SCHEMA_PATH = ROOT / "schema" / "skill.schema.json"
 
 FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
@@ -48,9 +52,9 @@ def main() -> int:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft7Validator(schema)
 
-    skill_dirs = sorted(p for p in SKILLS_DIR.glob("**/SKILL.md"))
+    skill_dirs = sorted(p for d in SKILLS_DIRS for p in d.glob("**/SKILL.md"))
     if not skill_dirs:
-        print(f"No SKILL.md files found under {SKILLS_DIR}")
+        print(f"No SKILL.md files found under {[str(d) for d in SKILLS_DIRS]}")
         return 0
 
     failures: list[str] = []

@@ -25,6 +25,22 @@
         "./skills/linkedin-post",
         "./skills/adversarial-review-engine"
       ]
+    },
+    {
+      "name": "python-dev",
+      "description": "Senior Python engineer agent in guide mode: builds by the repo's how-tos, explains in plain words, pushes back on scope creep, keeps deterministic checks green. Calls Matt Pocock's skills by name.",
+      "source": "./plugins/python-dev",
+      "strict": false,
+      "category": "development",
+      "keywords": [
+        "python",
+        "agent",
+        "uv",
+        "ruff",
+        "mypy",
+        "tdd",
+        "adk"
+      ]
     }
   ]
 }

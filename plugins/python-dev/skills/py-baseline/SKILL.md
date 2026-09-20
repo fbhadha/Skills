@@ -21,6 +21,8 @@ The skeleton every repo this agent touches ends up with, so a junior reader can 
 | `.pre-commit-config.yaml` | ruff, ruff-format, mypy on changed files, import-linter, pylint too-many-lines, detect-secrets | `templates/pre-commit-config.yaml` |
 | `.github/workflows/ci.yml` (or the GitLab equivalent) | pre-commit on the files the PR changed, the whole test suite, then the Repowise change gate | `templates/ci.yml`, `templates/gitlab-ci.yml` |
 | `scripts/repowise_gate.py` | the CI change gate over Repowise's Python API | `templates/repowise_gate.py` |
+| `scripts/run_readme_blocks.py` | executes every ```bash ci``` block in `README.md` in CI | `templates/run_readme_blocks.py` |
+| `.secrets.baseline` | detect-secrets baseline, created by `uv run detect-secrets scan > .secrets.baseline` | created by `detect-secrets` |
 | `.repowise/decisions.yaml` | Repowise decision records, tracked; the rest of `.repowise/` is gitignored | created by `repowise decision export` |
 | `.env.example` | every key the code reads, with a comment, no values | `templates/env.example` |
 | `AGENTS.md` | pointers only, under 40 lines; every harness reads it | `templates/AGENTS.md` |
@@ -69,6 +71,6 @@ Repowise rules: every scripted call is `DO_NOT_TRACK=1 repowise <cmd> --no-edito
 ## Applying it (rules for `py-intake`)
 
 1. Never overwrite. Merge missing keys into existing tables; leave existing values; report every difference as a proposed change and let the user accept or decline each.
-2. Fill placeholders (`{{PACKAGE}}`, `{{PYDEV_REV}}`, `{{PYTHON}}`) from the repo, never by guessing.
+2. Fill placeholders from the repo, never by guessing: `{{PROJECT}}` (repo name), `{{PACKAGE}}` (import name under `src/`), `{{PYTHON}}` (e.g. `3.12`), `{{PYTHON_NODOT}}` (`312`), `{{SHAPE}}`, `{{LAYERS}}`, `{{PORT}}` (per how-to), `{{NUMBER}}`, `{{TITLE}}`, `{{DATE}}` (per ADR).
 3. Brownfield: propose the baseline as tickets, one file group at a time, each green before the next.
 4. Prove each gate bites before finishing: make a violation on a scratch file, watch the gate fail, revert, watch it pass.
