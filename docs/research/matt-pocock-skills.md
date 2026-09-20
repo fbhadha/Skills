@@ -64,6 +64,21 @@ The test for model-invoked: *could the model usefully reach for this autonomousl
 
 `implement-spec` (task-graph implementer subagents in worktrees, merger subagent, single PR), `pr` (PR body: summary visual from primary source, before/after evidence, one-way/two-way door, blast radius; credited to Dex Horthy's `show-me`), `retro` (stub: suggest environment improvements after a session; mechanical rules become deterministic checks, judgement calls go to `CODING_STANDARDS.md`; the review agent enforces standards, not the implementer), `setup-ts-deep-modules` (dependency-cruiser rules: entry points at package root are public, every subfolder private, tests through entry points, no cycles, no barrels, **prove the rule bites**), `loop-me`, `claude-handoff`, `writing-fragments` / `writing-beats` / `writing-shape` (explore vs exploit for prose), `git-guardrails-claude-code`, `setup-pre-commit`, `migrate-to-shoehorn`, `scaffold-exercises`.
 
+### 3.5 How the published site groups them (aihero.dev/skills)
+
+The site index groups by *when you reach for a skill*, which is a better mental model than the repo's engineering/productivity buckets:
+
+| Group | Skills | Site's one-liner |
+|---|---|---|
+| Getting Started | `setup-matt-pocock-skills`, `ask-matt` | Set up once, then find your way around. |
+| The Main Flow | `grill-with-docs` → `to-spec` → `to-tickets` → `implement` → `code-review` | The idea→ship spine, in order. |
+| Shaping | `wayfinder`, `prototype`, `research` | Explore an open question and produce a decision or answer that feeds the flow. |
+| Upkeep | `improve-codebase-architecture`, `diagnosing-bugs`, `resolving-merge-conflicts`, `triage`, `wizard` | Keep the codebase and issue list healthy; generates work for the flow. |
+| Productivity | `grill-me`, `handoff`, `to-questionnaire`, `teach`, `wait-what`, `writing-for-agents` | Human-facing workflows you run, not about code. |
+| Reference | `codebase-design`, `domain-modeling`, `grilling`, `tdd` | The reusable layer other skills invoke or cite. |
+
+The site's own definition of a skill, in three beats: **the problem** (an agent is only as good as the process you give it; left to guess, it produces plausible code that quietly rots the codebase), **the fix** (a skill encodes one good habit so the agent runs it the same way every time), **why it compounds** (skills form a chain; each one's output is the next one's input, so the whole workflow gets better as you tune single steps). Everything is MIT and works in any agent (Claude Code, Cursor, Codex, Copilot, Amp, Gemini CLI via skills.sh).
+
 ## 4. The flows (from `ask-matt`)
 
 **Main flow, idea → ship:**
