@@ -27,3 +27,7 @@ _Avoid_: persona, system prompt (those are where the core is pointed at from, no
 **Knowledge pack**:
 A reference-only skill in the Agent Skills format, with a fixed shape (trigger dependencies, shapes it knows, canonical example repo, extra checks, fault list), covering one Python ecosystem such as ADK or data engineering. Selected at intake from the repo's dependencies; anyone can write one from the pack template.
 _Avoid_: plugin (the harness-level bundle), module, library
+
+**Persona**:
+The short, always-loaded file that defines the agent: identity, guide voice, the two-tier pushback, the must-ask list, the checkpoints, and the pointers that say when to load each piece of knowledge. About a page. Holds no craft knowledge itself.
+_Avoid_: system prompt (harness term), CLAUDE.md (one container it can live in, not the thing)
