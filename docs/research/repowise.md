@@ -37,6 +37,13 @@ A local codebase-intelligence engine. `repowise init` parses the repo with tree-
 
 Change-level: after adding a 5-deep function to a clean file, the Python API `ChangeReviewService.review()` returned `status: review_required`, `introduced_total: 1`, naming the function and lines. The `repowise risk` CLI does **not** carry that health delta; only the API and the `get_change_risk` MCP tool do. `repowise health` has no threshold flag and always exits 0. The only Repowise command that exits non-zero on findings is `repowise workspace check` (multi-repo architecture rules).
 
+## Decisions and ADRs, verified
+
+- An ADR under `docs/adr/` with Nygard headings and `## Status` containing `Accepted` becomes an active decision on `repowise init`, accepted by the file itself. Matt Pocock's one-line `Status: accepted` form lands as a candidate only.
+- `repowise update` did not pick up a newly committed ADR; `repowise init` did. Re-index with `init` after writing one (it is idempotent and takes seconds).
+- The parser binds an ADR to modules by matching directory names in its title and decision text; it never binds to files, and YAML frontmatter `scope:` is ignored. `repowise why <file>` reported the file ungoverned until `repowise decision confirm <id> --scope <path>` was run, after which it reported "Alignment high, governed by 1 decision". `scripts/adr_sync.py` does that confirm for every accepted ADR from its `## Scope` section.
+- `repowise generate-claude-md --output AGENTS.md` appends a marker-delimited section to an existing file and replaces only that section on the next run (checked twice). The heading it writes is `# CLAUDE.md`, harmless below our pointers.
+
 ## The split
 
 Repowise owns what needs the whole graph or git history. Per-line linters own the commit gate, because they are line-precise, run in milliseconds on staged files, and every Python developer already knows their output.
@@ -47,8 +54,8 @@ Repowise owns what needs the whole graph or git history. Per-line linters own th
 | Duplication and dead code | Replaces pylint `duplicate-code` and vulture. Gate only on `--safe-only` unreachable files; unused exports are review input, never a failure. |
 | Assertion-free tests | Resolves the open Q18: no custom gate. Read via `repowise health --format json` and the `advisory` dimension. |
 | The change gate in CI: "this diff introduced no new health finding on the files it touched" | A 40-line script over `ChangeReviewService`; the CLI cannot do it. |
-| Brownfield orientation (`py-intake`, `py-orient`) | `init --no-prose`, `context`, `why`, `risk -t`, `dead-code`, the structural wiki, and the "does the score find the bugs?" callout as evidence for the user. |
-| Decision records | `repowise decision` stores accepted decisions in `.repowise/decisions.yaml` (tracked) and links them to graph nodes; our ADRs stay the human-readable form and intake imports one into the other. |
+| Brownfield orientation (`py-intake`) | `init --no-prose`, then the overview, health, dead code and decision candidates read through the `codebase-exploration` and `code-health` skills; the "does the score find the bugs?" callout as evidence for the user. No orientation page (ADR 0005). |
+| Decision records | ADR files in `docs/adr/` are the only write path; Repowise reads them at index time and `scripts/adr_sync.py` binds each to its `## Scope` paths. `.repowise/` stays gitignored; nothing is exported. |
 
 | Stays with established tools | Why |
 |---|---|
@@ -61,7 +68,7 @@ Repowise owns what needs the whole graph or git history. Per-line linters own th
 
 ## Constraints for `py-baseline`
 
-- `.repowise/` is gitignored except `decisions.yaml`. Each developer and CI indexes locally.
+- `.repowise/` is gitignored entirely. Each developer and CI indexes locally in seconds; ADR files carry the decisions.
 - CI runs `DO_NOT_TRACK=1 repowise init --no-prose --no-editor-setup -y` then the gate script. Index time is under the test suite's on every repo tried.
 - The gate script imports `repowise.core`, which is AGPL. It is a development script in the target repo, run in CI, never shipped inside a product. If the user's repo is itself distributed as a product, swap the script for the CLI's `risk` percentile and lose the health delta; record that in an ADR.
 - Never `repowise init` with editor setup from a skill: it edits `~/.claude/settings.json` and repoints its single MCP entry at whichever repo ran last. Offer it as a separate, explicit step.

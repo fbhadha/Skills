@@ -21,6 +21,10 @@ A kind of addition this repo already knows how to make: it has a how-to in `docs
 
 The person every file and doc is written for: reads Python, has never seen this repo, cannot ask the author. If they could not continue the work from the docs alone, the docs are not done.
 
+### Decision
+
+A constraint the user accepted, written as an ADR in `docs/adr/` with the paths it governs. Repowise reads the ADRs and warns whoever edits a governed path. Nothing else counts as a decision: not a comment, not a chat message, not a candidate Repowise mined from history.
+
 ## Decisions with a page of their own
 
 See `docs/adr/`. Only decisions that were hard to reverse, contested, or surprising get one.

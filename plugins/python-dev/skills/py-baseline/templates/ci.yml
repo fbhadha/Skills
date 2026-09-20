@@ -66,5 +66,7 @@ jobs:
       - run: uv sync --frozen
       - name: index (no model, nothing written outside .repowise/)
         run: uv run repowise init --no-prose --no-editor-setup --no-save-key -y
+      - name: bind accepted ADRs to the paths they govern
+        run: uv run python scripts/adr_sync.py --no-index
       - name: no touched file got worse
         run: uv run python scripts/repowise_gate.py "origin/${{ github.base_ref }}..HEAD"

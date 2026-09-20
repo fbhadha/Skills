@@ -49,4 +49,5 @@ change-gate:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
     - uv run repowise init --no-prose --no-editor-setup --no-save-key -y
+    - uv run python scripts/adr_sync.py --no-index
     - uv run python scripts/repowise_gate.py "$CI_MERGE_REQUEST_DIFF_BASE_SHA..HEAD"

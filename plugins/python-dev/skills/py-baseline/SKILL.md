@@ -23,15 +23,15 @@ The skeleton every repo this agent touches ends up with, so a junior reader can 
 | `scripts/repowise_gate.py` | the CI change gate over Repowise's Python API | `templates/repowise_gate.py` |
 | `scripts/run_readme_blocks.py` | executes every ```bash ci``` block in `README.md` in CI | `templates/run_readme_blocks.py` |
 | `.secrets.baseline` | detect-secrets baseline, created by `uv run detect-secrets scan > .secrets.baseline` | created by `detect-secrets` |
-| `.repowise/decisions.yaml` | Repowise decision records, tracked; the rest of `.repowise/` is gitignored | created by `repowise decision export` |
 | `.env.example` | every key the code reads, with a comment, no values | `templates/env.example` |
-| `AGENTS.md` | pointers only, under 40 lines; every harness reads it | `templates/AGENTS.md` |
+| `AGENTS.md` | pointers only, under 40 lines, above the Repowise managed section (`repowise generate-claude-md --output AGENTS.md`) | `templates/AGENTS.md` |
 | `CLAUDE.md` | one line: `@AGENTS.md` | `templates/CLAUDE.md` |
 | `CONTEXT.md` | the glossary, Matt Pocock's format, created lazily | `templates/CONTEXT.md` |
-| `docs/adr/` | decisions that pass the three gates, one to three sentences each | `templates/adr-template.md` |
+| `docs/adr/` | decisions, Nygard headings with `## Status` Accepted and `## Scope` paths; Repowise reads them | `templates/adr-template.md` |
+| `scripts/adr_sync.py` | re-indexes and binds each accepted ADR to its Scope paths in Repowise | `templates/adr_sync.py` |
 | `docs/agents/mode.md` | the mode line the skills read | `templates/mode.md` |
 | `docs/howto/add-a-<shape>.md` | one per shape, mirrors an `example/` that compiles | `templates/howto-template.md` |
-| `docs/architecture.md` | the layers and what talks to what, kept consistent with the import-linter contract | `templates/architecture.md` |
+| `docs/architecture.md` | the layering rules and the composition root only; the live map is Repowise | `templates/architecture.md` |
 | `README.md` | run, test, where to start reading; commands in ```bash ci``` blocks are executed in CI | `templates/README-skeleton.md` |
 
 ## The gates
@@ -48,13 +48,18 @@ Two layers. Line-level tools run at commit on the changed files. Repowise (`docs
 | Layering | `import-linter` layers contract | commit |
 | Types | `mypy --strict` on `src/` | commit |
 | A change made a touched file worse (new nesting, god class, I/O in a loop, duplication, swallowed exception) | `scripts/repowise_gate.py`: `ChangeReviewService.review()` on `origin/main..HEAD`, fails when `introduced_total > 0` | CI |
-| Health score, ranking, what to refactor first | `repowise health`, `--refactoring-targets`, `--trend`; score ratcheted in `docs/health/` | health |
+| Health score, ranking, what to refactor first, trend | `repowise health`, `--refactoring-targets`, `--trend` (its own history; nothing written to docs) | health |
 | Duplication | `repowise health` (`dry_violation`) | health |
 | Dead code | `repowise dead-code --safe-only` fails on unreachable files; unused exports are listed, never fail | health |
-| Test with no assertion, mock-saturated test | `repowise health --format json`, advisory dimension (`assertion_free_test`, `mock_saturated_test`); listed in the health report | health; review |
+| Test with no assertion, mock-saturated test | `repowise health --format json`, advisory dimension (`assertion_free_test`, `mock_saturated_test`) | health; review |
+| Docs that name paths, links or commands the tree no longer has | `repowise doc-drift` | health |
 | Security | `bandit` (Repowise's 16-pattern scan is a floor, not a scanner) | health |
-| Fake tests (pass on any mutation) | `mutmut`, score ratcheted in `docs/health/` | health |
+| Fake tests (pass on any mutation) | `mutmut`; the score is reported by `py-health` and read by `py-review`, not stored | health |
 | Weakened test (assertion loosened, test deleted, skip added) | mutation-score ratchet, `py-review` in a fresh context, and a `CODEOWNERS` line on `tests/` requiring the owner's approval | health; review; platform |
+
+## Where Repowise reads and writes (ADR 0005 in this repo)
+
+Reads: the source tree, git history, `docs/adr/*.md` (Nygard headings; `## Status` Accepted makes it govern, `## Scope` paths are bound by `scripts/adr_sync.py`), `# WHY:` / `# DECISION:` comments, and `coverage.lcov` when ingested with `repowise coverage add coverage.lcov`. Writes: `.repowise/` (gitignored, rebuilt anywhere in seconds) and the managed section between `REPOWISE:START` and `REPOWISE:END` in `AGENTS.md`. Nothing else. No `docs/health/`, no orientation page, no decisions store in git: the ADR files and the code are the truth and the index is derived from them.
 
 Repowise rules: every scripted call is `DO_NOT_TRACK=1 repowise <cmd> --no-editor-setup` where the flag exists; `.repowise/` is gitignored except `decisions.yaml`; the index is rebuilt in CI with `repowise init --no-prose --no-editor-setup -y` (under ten seconds on the repos tried). The editor wiring (`.mcp.json`, hooks in `~/.claude/settings.json`) is offered to the user as a separate step, never done by a skill.
 

@@ -6,7 +6,7 @@ Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in t
 
 ## Install
 
-Prerequisites in every harness: `uv`, Python 3.11 or newer, and Matt Pocock's skills.
+Prerequisites in every harness: `uv`, Python 3.11 or newer, Matt Pocock's skills, and Repowise (`pip install repowise` or `uv tool install repowise`, plus its agent plugin: `/plugin marketplace add repowise-dev/repowise` then `/plugin install repowise@repowise` on Claude Code; `repowise agents add --target=codex` or `--target=vscode` elsewhere). Repowise is the agent's only store for everything derived from the code (ADR 0005 in this repo).
 
 | Harness | Install | Select the persona |
 |---|---|---|
@@ -42,6 +42,8 @@ Best effort. Pre-commit and CI in the target repo are the enforcement; the hooks
 Copilot and Codex get the same guards as repo-level hook files written by `py-intake`; Copilot's hooks fail open on timeout, Codex's hook contract is unverified, so treat both as advisory.
 
 ## Checks the baseline installs in a target repo
+
+One read path and one write path per kind of knowledge. Everything derived from the code (structure, callers, blast radius, why, health, dead code, change risk, doc drift) is read from Repowise through its six skills. Humans and the agent write only ADRs, `CONTEXT.md`, how-tos and tool tables; `scripts/adr_sync.py` binds each ADR to the paths it governs so Repowise warns whoever edits them.
 
 Line-level at commit: ruff (bugbear, blind except, security, print, commented-out code, prompt-shaped TODOs and docstrings, complexity, boolean flags, banned grab-bag modules), mypy strict on `src/`, import-linter layers, pylint module length, detect-secrets. Whole-repo and per-change: [Repowise](https://github.com/repowise-dev/repowise) health score, duplication, dead code, assertion-free tests, and a CI gate that fails when a diff makes a touched file worse. On demand: mutmut, bandit. Why this split: `docs/research/repowise.md`.
 

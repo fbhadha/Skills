@@ -10,13 +10,13 @@ metadata:
 
 # Ask dev
 
-You don't remember every skill, so ask. This is the router over three layers: Matt Pocock's process skills, Google's ADK skills, and this plugin's craft skills. It answers one question, "what do I type now?", and stops.
+You don't remember every skill, so ask. This is the router over four layers: Matt Pocock's process skills, Repowise's codebase-intelligence skills, Google's ADK skills, and this plugin's craft skills. It answers one question, "what do I type now?", and stops.
 
 ## 1. Read the state
 
 - `docs/agents/mode.md`. Missing means the repo is not set up: the answer is `py-intake`, nothing else.
-- `CONTEXT.md`, `docs/agents/issue-tracker.md`, the newest `docs/health/*.md`, the `docs/howto/` listing, and any open ticket the user names.
-- The door check: confirm `grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `diagnosing-bugs`, `prototype` and `research` are installed under those names. Report any that are missing and how to install them (`claude plugins install mattpocock-skills`, or `npx skills@latest add mattpocock/skills`). Do not improvise a missing skill's behaviour.
+- `CONTEXT.md`, `docs/agents/issue-tracker.md`, the Repowise section of `AGENTS.md` (health line, last-indexed commit), the `docs/howto/` listing, and any open ticket the user names.
+- The door check: confirm Matt Pocock's `grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `diagnosing-bugs`, `prototype`, `research` and Repowise's `codebase-exploration`, `pre-modification-check`, `architectural-decisions`, `code-health`, `change-review`, `dead-code-cleanup` are installed under those names. Report any that are missing and how to install them (`mattpocock-skills` and `repowise` plugins on Claude Code; `npx skills@latest add mattpocock/skills` and `repowise agents add` elsewhere). Do not improvise a missing skill's behaviour.
 
 ## 2. Place the user on a flow
 
@@ -28,7 +28,9 @@ You don't remember every skill, so ask. This is the router over three layers: Ma
 | A branch to review | `py-review <fixed-point>` | Standards, Spec and Craft axes, report first, fixes on request. |
 | Something is broken | describe the bug; the agent reaches for `diagnosing-bugs` | It builds a red-capable loop before any theory. |
 | Tests you don't trust | `py-test-audit tests/` | Classifies every test; proposes deletions and rewrites at the right seam. |
-| "Where is this repo ugly?" | `py-health` | The scored report, then `improve-codebase-architecture` (Matt's) on the worst candidate. |
+| "Where is this repo ugly?" | `py-health` | Repowise health, dead code, doc drift and the mutation score in one report, then `improve-codebase-architecture` (Matt's) on the worst file. |
+| "Why is this built this way?" | describe the file; the agent reaches for `architectural-decisions` (Repowise) | ADRs, `# WHY:` comments and commit archaeology for that path. |
+| A decision was just made in conversation | write the ADR from `docs/adr/` template, then `scripts/adr_sync.py` | The only way a decision is recorded. |
 | Working on an ADK agent | `adk-build` | Google's ADK skills with this plugin's baseline applied. |
 | ADK 1.x patterns found at intake | `adk-migrate` | Detects all, forces what breaks on 2.x, tickets the rest as `later`. |
 | Too big and foggy for one session | `wayfinder` (Matt's) | A map of decision tickets; merges back at `to-spec`. |
@@ -38,7 +40,7 @@ You don't remember every skill, so ask. This is the router over three layers: Ma
 | The last message didn't land | `wait-what` (Matt's) | Re-pitched in plain English with the glossary's words. |
 | Review the "not now" list | `py-intake later` | Shows the `later` tickets and asks what to kill. |
 
-Skills marked "Matt's" come from `mattpocock-skills`. The user-invoked ones must be typed by the user; this skill never calls them.
+Skills marked "Matt's" come from `mattpocock-skills`; those marked "Repowise" from the `repowise` plugin. The user-invoked ones must be typed by the user; this skill never calls them.
 
 ## 3. Answer
 
