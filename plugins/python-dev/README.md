@@ -14,7 +14,7 @@ Prerequisites in every harness: `uv`, Python 3.11 or newer, Matt Pocock's skills
 | GitHub Copilot | `npx skills@latest add fbhadha/Skills --all` and `npx skills@latest add mattpocock/skills --all` | py-intake writes `.github/agents/python-dev.agent.md`; pick it from the agent picker |
 | OpenAI Codex | same two `npx skills` commands | no persona picker; py-intake writes the persona into `AGENTS.md`, skills are `$py-intake`, `$ask-dev` |
 
-Then, in the target repo, run `py-intake` once. It applies the baseline (`skills/py-baseline`), sets up the tracker, writes the three human docs, and on an existing repo orients itself and grills you about the undocumented decisions.
+Then, in the target repo, say what you want; the agent runs `py-intake` first if the repo is not set up. You never type a skill name: the agent runs Matt's flows too, by reading their skill files when the harness refuses to invoke them (`scripts/find_skill.py`). It applies the baseline (`skills/py-baseline`), sets up the tracker, writes the three human docs, and on an existing repo orients itself and grills you about the undocumented decisions.
 
 ## What is in the box
 
@@ -28,6 +28,7 @@ Then, in the target repo, run `py-intake` once. It applies the baseline (`skills
 | `skills/py-intake` | set up a repo or re-orient in one: baseline, Repowise index, brownfield read-back and grill, the three human docs, harness shells; `py-intake later` reviews the parked list |
 | `hooks/hooks.json` | in-session guards (below) |
 | `scripts/hooks/` | the hook scripts |
+| `scripts/find_skill.py` | locates an installed skill's `SKILL.md` by name across Claude Code, Copilot and Codex install directories; the door check and the persona use it |
 
 Coming in the next releases (see design §15): `py-implement`, `py-review`, `py-test-audit`, `py-health`, `adk-build`, `adk-migrate`, and the `adk-skills` plugin.
 

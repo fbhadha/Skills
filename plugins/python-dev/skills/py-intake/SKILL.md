@@ -21,8 +21,8 @@ Run once per repo, and again whenever you come back after a long gap. Every step
 |---|---|---|
 | `uv`, `git` | on PATH | stop; say how to install |
 | `repowise` | `uv run repowise --version` or on PATH | `uv add --group dev repowise` (Python 3.11 or newer) |
-| Matt Pocock's skills | `grilling`, `domain-modeling`, `codebase-design`, `tdd`, `code-review` are callable | say: `mattpocock-skills` plugin on Claude Code, `npx skills@latest add mattpocock/skills` elsewhere; continue, but the grilling steps below wait until it is installed |
-| Repowise's skills | `codebase-exploration`, `pre-modification-check`, `architectural-decisions`, `code-health`, `change-review`, `dead-code-cleanup` are callable | say: `repowise` plugin on Claude Code (`/plugin marketplace add repowise-dev/repowise`), `repowise agents add --target=<codex|vscode>` elsewhere; continue with the CLI (`repowise health`, `dead-code`, `context`, `why`) |
+| Matt Pocock's skills | `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/find_skill.py" grilling` (and `setup-matt-pocock-skills`, `grill-with-docs`) prints a path | say: `mattpocock-skills` plugin on Claude Code, `npx skills@latest add mattpocock/skills` elsewhere; continue, but steps 3 and 6 wait until it is installed |
+| Repowise's skills | `find_skill.py codebase-exploration` (and the other five: `pre-modification-check`, `architectural-decisions`, `code-health`, `change-review`, `dead-code-cleanup`) prints a path | say: `repowise` plugin on Claude Code (`/plugin marketplace add repowise-dev/repowise`), `repowise agents add --target=<codex|vscode>` elsewhere; continue with the CLI (`repowise health`, `dead-code`, `context`, `why`) |
 
 Never improvise a missing skill's behaviour.
 
@@ -51,11 +51,9 @@ Done when `docs/agents/issue-tracker.md` exists.
 
 The remote decides. GitHub remote: GitHub Issues. GitLab remote: GitLab Issues. No remote: Backlog.md. A public repo gets a warning that its planning will be public and the offer of Backlog.md instead.
 
-Matt Pocock's `setup-matt-pocock-skills` writes the tracker file, `docs/agents/domain.md` and the `## Agent skills` block, and it is user-invoked, so you cannot call it. Say exactly:
+Matt Pocock's `setup-matt-pocock-skills` writes the tracker file, `docs/agents/domain.md` and the `## Agent skills` block. It is user-invoked, so the Skill tool refuses it: run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/find_skill.py" setup-matt-pocock-skills`, read the `SKILL.md` it prints, and follow it here. You already know its answers from step 1: tracker from the remote (GitHub, GitLab, or **Other: "Backlog.md, see docs/agents/issue-tracker.md"**), default triage labels, single-context, edit `AGENTS.md`. Ask the user only what step 1 did not settle, and show the draft files before writing, as it says.
 
-> Type `/setup-matt-pocock-skills` (Claude Code), `/setup-matt-pocock-skills` (Copilot) or `$setup-matt-pocock-skills` (Codex). Answer the tracker question with **<GitHub | GitLab | Other: "Backlog.md, see docs/agents/issue-tracker.md">**, accept the default labels, single-context. Then type `py-intake` again; it resumes here.
-
-Stop and wait. On resume, for the Backlog.md case: run `npx backlog.md init --defaults --no-git` if `backlog/config.yml` is missing, and replace `docs/agents/issue-tracker.md` with `templates/issue-tracker-backlog-md.md` (Matt's "Other" file is freeform prose; ours carries the commands the skills need). Say the file was replaced and why.
+Then, for the Backlog.md case: run `npx backlog.md init --defaults --no-git` if `backlog/config.yml` is missing, and replace `docs/agents/issue-tracker.md` with `templates/issue-tracker-backlog-md.md` (the "Other" file is freeform prose; ours carries the commands the skills need). Say the file was replaced and why.
 
 ## 4. Baseline
 
@@ -137,7 +135,7 @@ Copilot's cloud agent cannot run intake or grilling; say so once. Codex has no h
 1. `uv run pre-commit run --all-files` and `uv run pytest -m "not eval"`; show the output; on brownfield, red is recorded as the first tickets, not fixed now.
 2. Commit in groups with messages that name the decision (`intake: baseline tool tables`, `intake: ADR 1, adapters never normalise`, ...). Never one commit called "setup".
 3. ADK 1.x found in step 1: say that `adk-migrate` is the first ticket and create it.
-4. End with the `ask-dev` answer shape: what to type next, why, what it will ask. Greenfield: `grill-with-docs`. Brownfield: `improve-codebase-architecture` on the worst file, or the first `later` ticket the user wants back.
+4. End with the `ask-dev` answer shape and start the step: greenfield, `grill-with-docs` on the user's idea; brownfield, `improve-codebase-architecture` on the worst file, or the first `later` ticket the user wants back.
 
 ## 10. `later`
 
