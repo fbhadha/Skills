@@ -62,6 +62,31 @@ def repowise(*args: str) -> subprocess.CompletedProcess[str]:
     return subprocess.run(["repowise", *args], capture_output=True, text=True, check=False, env=env)
 
 
+def bind(adr: Path, by_title: dict[str, dict[str, str]]) -> str | None:
+    """Bind one ADR. Returns an error message, or None when bound or not accepted."""
+    text = adr.read_text(encoding="utf-8")
+    parts = sections(text)
+    status = parts.get("status", "").split()
+    if not status or status[0].lower() not in ("accepted", "approved"):
+        return None
+    paths = scope_paths(parts.get("scope", ""))
+    if not paths:
+        return f"{adr}: accepted but has no '## Scope' paths; add the paths it governs"
+    title = title_of(text)
+    decision = by_title.get(title.lower())
+    if decision is None:
+        return f"{adr}: no Repowise decision titled {title!r}; run without --no-index"
+    cmd = ["decision", "confirm", decision["id"], "--reason", f"Accepted in {adr}"]
+    cmd += ["--evidence", str(adr)]
+    for path in paths:
+        cmd += ["--scope", path]
+    confirmed = repowise(*cmd)
+    if confirmed.returncode != 0:
+        return f"{adr}: repowise refused: {confirmed.stdout.strip()} {confirmed.stderr.strip()}"
+    print(f"{adr}: bound to {', '.join(paths)}")
+    return None
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -91,43 +116,10 @@ def main() -> int:
     decisions = json.loads(listed.stdout).get("decisions", [])
     by_title = {d["title"].strip().lower(): d for d in decisions}
 
-    failures = 0
-    for adr in sorted(ADR_DIR.glob("*.md")):
-        text = adr.read_text(encoding="utf-8")
-        parts = sections(text)
-        status = parts.get("status", "").split()
-        if not status or status[0].lower() not in ("accepted", "approved"):
-            continue
-        paths = scope_paths(parts.get("scope", ""))
-        title = title_of(text)
-        decision = by_title.get(title.lower())
-        if not paths:
-            print(f"{adr}: accepted but has no '## Scope' paths; add the paths it governs")
-            failures += 1
-            continue
-        if decision is None:
-            print(f"{adr}: no Repowise decision titled {title!r}; run without --no-index")
-            failures += 1
-            continue
-        cmd = [
-            "decision",
-            "confirm",
-            decision["id"],
-            "--reason",
-            f"Accepted in {adr}",
-            "--evidence",
-            str(adr),
-        ]
-        for path in paths:
-            cmd += ["--scope", path]
-        confirmed = repowise(*cmd)
-        if confirmed.returncode != 0:
-            print(f"{adr}: repowise refused: {confirmed.stdout.strip()} {confirmed.stderr.strip()}")
-            failures += 1
-            continue
-        print(f"{adr}: bound to {', '.join(paths)}")
-
-    return 1 if failures else 0
+    errors = [bind(adr, by_title) for adr in sorted(ADR_DIR.glob("*.md"))]
+    for error in filter(None, errors):
+        print(error)
+    return 1 if any(errors) else 0
 
 
 if __name__ == "__main__":
