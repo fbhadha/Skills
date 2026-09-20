@@ -19,3 +19,11 @@ _Avoid_: pattern (overloaded with GoF design patterns), template (the how-to is 
 **How-to**:
 One of the repo's human-facing docs, `docs/howto/add-a-<thing>.md`, describing one shape as steps that mirror a real example package. Executed or compiled in CI so it cannot drift.
 _Avoid_: guide, tutorial, playbook
+
+**Craft core**:
+The judgement layer that applies to every Python repo: design rules, testing rules, the baseline toolchain, the fault catalogue, and the canonical example repos. One skill, always available, never ecosystem-specific.
+_Avoid_: persona, system prompt (those are where the core is pointed at from, not the core itself)
+
+**Knowledge pack**:
+A reference-only skill in the Agent Skills format, with a fixed shape (trigger dependencies, shapes it knows, canonical example repo, extra checks, fault list), covering one Python ecosystem such as ADK or data engineering. Selected at intake from the repo's dependencies; anyone can write one from the pack template.
+_Avoid_: plugin (the harness-level bundle), module, library
