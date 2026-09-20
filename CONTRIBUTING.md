@@ -98,3 +98,16 @@ Skills are versioned independently via `metadata.version` (SemVer). Bump it when
 ## Code of Conduct
 
 This project follows the [Contributor Covenant](CODE_OF_CONDUCT.md). By participating you agree to uphold it.
+
+## Changing the `python-dev` agent
+
+The agent lives under `plugins/python-dev/`. Its rules are stricter than the library's, because a target repo depends on them:
+
+- **One persona file.** `agents/python-dev.md` is the only copy; `py-intake` renders the Copilot and Codex forms in the target repo. Keep it about a page: identity, voice, rules and pointers. Knowledge goes in skills.
+- **Skills are model-invoked** and carry `agents/openai.yaml`. `scripts/check_invocation_sync.py` fails when the two switches disagree.
+- **Call upstream skills by name, never copy them.** Add the name to `upstream.json` with the invocation you assume; `scripts/check_upstream_skills.py` verifies it against the pinned commit in CI. Bump the pin deliberately, in its own commit, after reading the upstream changelog.
+- **One read path and one write path per kind of knowledge** (ADR 0005). Anything derived from the code comes from Repowise; do not add a second store, report file or orientation page.
+- **No custom gates.** A check goes in as an established tool's rule in `skills/py-baseline/templates/pyproject-tools.toml`; the only scripts we maintain are the change gate, the ADR binder and the README block runner, and they must pass the baseline's own ruff rules.
+- **Verify before you write.** Every claim about a tool or an upstream skill is checked by running it; `docs/research/` records what was verified and when.
+- **A knowledge pack** is `skills/pack-<domain>/` in the shape of `packs/TEMPLATE.md`, reference only.
+- Before a release: `python scripts/validate_skills.py`, `python scripts/check_invocation_sync.py`, `python scripts/check_upstream_skills.py`, `claude plugin validate --strict plugins/python-dev`, a `claude --agent python-dev --plugin-dir plugins/python-dev -p` smoke test, then bump `version` in `plugin.json` and add a `CHANGELOG.md` entry.
