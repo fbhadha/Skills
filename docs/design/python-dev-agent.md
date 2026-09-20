@@ -159,7 +159,7 @@ fbhadha/Skills/
 ├── .claude-plugin/marketplace.json     existing; add entries for python-dev and adk-skills
 ├── skills/                             the 9 existing community skills, untouched
 ├── plugins/
-│   ├── python-dev/                     THE AGENT PLUGIN (one directory, three loaders)
+│   └── python-dev/                     THE AGENT PLUGIN (one directory, three loaders); Google's ADK skills are installed, not vendored (decision 23)
 │   │   ├── .claude-plugin/plugin.json  read by Claude Code natively, by Codex and Copilot as a legacy manifest
 │   │   ├── agents/python-dev.md        the persona; body = system prompt (Claude Code and Copilot)
 │   │   ├── agents/py-reviewer.md       craft-axis reviewer: Read/Grep/Glob/Bash only, no Agent tool (cannot recurse), no Edit
@@ -167,8 +167,6 @@ fbhadha/Skills/
 │   │   │                               py-test-audit, py-health, adk-build, adk-migrate (each with agents/openai.yaml)
 │   │   ├── hooks/hooks.json            format-on-edit, deny destructive git, deny weakened tests, stop-gate on red checks
 │   │   └── scripts/                    the hook scripts and the gate implementations
-│   └── adk-skills/                     Google's adk-* skills vendored verbatim, Apache-2.0, NOTICE + UPSTREAM.json,
-│                                       refreshed only by scripts/sync_adk_skills.py at a pinned commit
 ├── scripts/
 │   ├── render_harness_shells.py        persona body -> .github/agents/*.agent.md and the AGENTS.md section; CI fails on drift
 │   ├── check_pocock_refs.py            every skill we call by name must exist upstream at the pinned sha and be model-invoked
@@ -237,12 +235,13 @@ fbhadha/Skills/
 | 20 | **One read path and one write path per kind of codebase knowledge; Repowise is the store for everything derived from the code** (structure, blast radius, why, health, dead code, change risk, doc drift). Humans and the agent write only ADRs (`docs/adr/`, Nygard headings, `## Scope`), `CONTEXT.md`, the how-tos and the tool tables. `docs/health/`, the orientation page and `py-orient` are gone; `docs/architecture.md` holds rules only; the Repowise plugin's six skills are called by name after a door check. | ADR 0005. `.repowise/` is gitignored; `scripts/adr_sync.py` binds ADRs to paths. |
 | 21 | **The agent runs every flow, including Matt's user-invoked skills.** Where the Skill tool refuses a skill, the persona locates its `SKILL.md` with `scripts/find_skill.py` and follows it in the conversation. `ask-dev` names the next step and starts it. The user talks; they never type a skill name. | §13.5 correction 1 rewritten. `py-intake` runs `setup-matt-pocock-skills` itself with the answers it already knows. |
 | 22 | **Session boundaries are explicit.** After `to-spec` and after `to-tickets` the agent runs Matt's `handoff` with the next step as its argument and tells the user to open a fresh session with the document; `py-implement` is one ticket per session and hands off the same way. A session that starts with a handoff path reads it, then `AGENTS.md`, and never re-asks what it answers. | Persona "Session boundaries"; `ask-dev` row. Keeps each build inside the smart zone Matt's `ask-matt` describes. |
+| 23 | **Google's ADK skills are installed from Google's repo, not vendored.** `npx skills@latest add google/adk-python -s adk-agent-builder,adk-architecture,adk-debug,adk-style` puts them in `.agents/skills/` where `find_skill.py` finds them; the other seven are for adk-python contributors. The `adk-skills` plugin and `sync_adk_skills.py` are dropped. `adk-build` routes into Google's skills and adds the baseline; `adk-migrate` detects 1.x mechanically and forces only what silently breaks. | Same rule as Matt's and Repowise's: one maintainer, one install, called by name. Verified 2026-09-20 against adk-python at d57c84f (ADK 2.9). |
 
 ## 15. Build order
 
 1. `plugins/python-dev/` skeleton: manifest, persona, `py-design` (craft core with the fault catalogue and the three canonical repos), `py-baseline` templates, `ask-dev`.
 2. `py-intake` with the health suite, the brownfield orientation and auto-grill, the tracker rule (including the Backlog.md template), the three human docs, and the harness shells.
 3. `py-implement`, `py-review` (with the `py-reviewer` agent), `py-test-audit`.
-4. `adk-skills` vendoring script and plugin; `adk-build` and `adk-migrate` (the ADK pack); the data-engineering pack.
+4. `adk-build` and `adk-migrate` over Google's own skills (installed, not vendored; decision 23); the data-engineering pack and the pack template. (built)
 5. CI: skill validation, invocation sync, upstream name check, persona drift check, `claude plugin validate --strict`.
 6. First release: version 0.1.0, you run it on the GitLab repo, report back.

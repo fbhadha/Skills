@@ -36,7 +36,8 @@ Establish facts from the repo, never by guessing. Present them as one table and 
 | Python | `.python-version`, `pyproject.toml` `requires-python`, else `python3 --version` |
 | Package name | the directory under `src/` with an `__init__.py`, else `[project] name` |
 | Tooling present | `pyproject.toml` `[tool.*]` tables, `.pre-commit-config.yaml`, CI files, `uv.lock`, `requirements*.txt` |
-| ADK | `google-adk` in dependencies and its version: `1.x` means `adk-migrate` is the first ticket after intake; `2.x` means `adk-build` applies |
+| ADK | `google-adk` in dependencies and its version: `1.x` means `adk-migrate` is the first ticket after intake; `2.x` means `adk-build` applies. Either way install Google's skills from their repo: `npx skills@latest add google/adk-python -s adk-agent-builder,adk-architecture,adk-debug,adk-style -a '*' -y` |
+| Packs | dependencies that select a knowledge pack (`pack-data-engineering`: dlt, pandas, polars, pyarrow, sqlalchemy, duckdb, dbt-core, pandera, pyspark, prefect, dagster, airflow). A selected pack's "extra checks" section is applied in step 4 and its name is written under `## Packs` in `AGENTS.md` |
 | Docs already there | `AGENTS.md`, `CLAUDE.md`, `CONTEXT.md`, `docs/adr/`, `docs/agents/`, `docs/howto/`, `README.md` |
 | Repowise state | `.repowise/` present? `AGENTS.md` has a `REPOWISE:START` marker? |
 

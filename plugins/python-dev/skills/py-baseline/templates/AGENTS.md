@@ -24,6 +24,10 @@ uv run python scripts/adr_sync.py         # re-index and bind ADRs after writing
 
 Modules under 400 lines, tests under 150. No `utils`/`helpers`/`common`/`misc` modules. Domain imports no I/O. No blind `except`, no `print`, no TODO without an owner and an issue. Tests before code, at an agreed seam; existing tests are read-only from red to green. `pytest` treats warnings as errors. A diff that makes a touched file worse fails CI (`scripts/repowise_gate.py`).
 
+## Packs
+
+<!-- py-intake lists the knowledge packs it selected from pyproject.toml, one per line, e.g. pack-data-engineering -->
+
 ## Agent
 
 The `python-dev` persona (plugin `python-dev`, repo `fbhadha/Skills`) is the intended session agent. Its skills: `py-design` (craft), `py-baseline` (this layout), `py-intake` (set up or re-orient), `ask-dev` (what to run next). Process skills come from Matt Pocock's plugin; codebase intelligence from the Repowise plugin. Both are called by name.

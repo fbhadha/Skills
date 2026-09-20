@@ -25,6 +25,9 @@
     "./skills/py-intake",
     "./skills/py-implement",
     "./skills/py-review",
-    "./skills/py-test-audit"
+    "./skills/py-test-audit",
+    "./skills/adk-build",
+    "./skills/adk-migrate",
+    "./skills/pack-data-engineering"
   ]
 }

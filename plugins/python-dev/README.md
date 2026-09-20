@@ -1,6 +1,6 @@
 # python-dev
 
-A senior Python engineer as a selectable agent. It builds by your repo's own how-tos, explains every step in plain words, pushes back on scope creep, and keeps deterministic checks green. Process comes from Matt Pocock's skills (called by name, never copied), framework knowledge from Google's ADK skills, craft and checks from here.
+A senior Python engineer as a selectable agent. It builds by your repo's own how-tos, explains every step in plain words, pushes back on scope creep, and keeps deterministic checks green. Process comes from Matt Pocock's skills, framework knowledge from Google's own ADK skills in `google/adk-python`, codebase intelligence from Repowise. All three are installed from their maintainers' repos and called by name, never copied. Craft, checks and packs come from here.
 
 Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in this repository.
 
@@ -29,11 +29,14 @@ Then, in the target repo, say what you want; the agent runs `py-intake` first if
 | `skills/py-implement` | one ticket per session, test-first, by the how-to, with the Repowise pre-edit checks, review, commit, and a handoff to the next session |
 | `skills/py-review` | four-axis review: Standards and Spec (Matt's code-review), Change (Repowise), Craft (py-reviewer and the fault catalogue); report first |
 | `skills/py-test-audit` | classify every test with evidence from Repowise's test-quality markers and mutation testing; propose deletions and rewrites |
+| `skills/adk-build` | Google ADK 2.x work: routes into Google's own skills, installed from `google/adk-python`, and adds this baseline's layout, test tiers and craft rules |
+| `skills/adk-migrate` | ADK 1.x to 2.x: mechanical detection, force only what silently breaks, evals first, expand, migrate, contract |
+| `skills/pack-data-engineering` | knowledge pack for pipelines, sources, sinks and frames; `packs/TEMPLATE.md` is the shape for new packs |
 | `hooks/hooks.json` | in-session guards (below) |
 | `scripts/hooks/` | the hook scripts |
 | `scripts/find_skill.py` | locates an installed skill's `SKILL.md` by name across Claude Code, Copilot and Codex install directories; the door check and the persona use it |
 
-Coming in the next releases (see design §15): `py-health`, `adk-build`, `adk-migrate`, and the `adk-skills` plugin.
+Coming next: `py-health` and the release checks (design §15, steps 5 and 6).
 
 ## Hooks (Claude Code)
 
