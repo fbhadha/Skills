@@ -65,13 +65,56 @@ GitHub Issues is free on all plans. Still, the default is **local markdown** und
 
 **Bug.** `/diagnosing-bugs` unchanged; `py-review` afterwards.
 
-## 8. What stays open
+## 8. Decisions taken on 2026-09-20
 
-Grill these before any skill is written.
+| Question | Decision |
+|---|---|
+| Where the agent lives | This repo, shipped as a second plugin (`python-dev`) installed next to `mattpocock-skills`. (See §9 for what "plugin" means.) |
+| Gate strictness on existing repos | Strict and blocking, on changed lines only, from day one. |
+| Brownfield intake | Deep read of the repo, then an automatic grilling session about every decision the code makes that no `CONTEXT.md` or ADR explains. The agent acts as a senior engineer mentoring a junior: names the alternative, says why it may be better, and always pushes for the better design. |
+| Deterministic bad-code detection | Ship a `py-health` suite (§10). Yes, this exists in the wild; it is several tools, not one. |
+| Canonical example codebases | `psf/requests` for a deep module, `cosmicpython/code` for ports-and-adapters layering, `dlt-hub/dlt` for the data-engineering extract → normalise → load shape (§11). |
+| ADK version | 2.x only for new code. A separate `adk-migrate` skill turns 1.x repos into 2.x, using Google's own migration notes. |
 
-1. **Where does the agent live?** This repo as a marketplace plugin (`python-dev`) installed alongside `mattpocock-skills`, or a separate repo. Marketplace is my recommendation: one install line for both.
-2. **Vendoring Google's skills.** Copy into this repo with a refresh script (stable, reviewable) or point the agent at the installed `google-adk` package source (always current, but the skills folder is not shipped in the wheel, so it would need the git checkout). Recommendation: vendor, refresh monthly, record the commit.
-3. **How hard the gates bite on brownfield.** Warn-only until the repo is clean, or fail from day one on changed files only (ADK's "new errors only" approach). Recommendation: changed-files-only, failing.
-4. **Persona depth.** How much of "what makes a great coder great" goes into `CLAUDE.md` versus `py-design`. Matt's rule says `CLAUDE.md` is pointers; the craft lives behind a pointer and loads when code is being designed or reviewed.
-5. **Your adapter → model → writer example.** I want to write it once, properly, as the worked example in `py-design`: a `Source` Protocol, two adapters (one real, one in-memory), a `Record` model, a `Writer` with one method. Confirm that is the shape you mean before I use it as the canonical example.
-6. **ADK version floor.** 2.x only, or must it handle 1.x repos? Google's migration notes list breaking changes; supporting both doubles the `adk-build` surface.
+## 9. What "this repo as a plugin" means
+
+Claude Code can load skills from a folder on your machine, or from a **plugin**. A plugin is just a Git repository with a small manifest file (`.claude-plugin/plugin.json`) that lists which skill folders it contains. When you run `claude plugins install <name>`, Claude Code downloads that repository, reads the manifest, and makes every listed skill available as a slash command. When the repository changes, the plugin updates itself.
+
+This repository already has that manifest (`.claude-plugin/marketplace.json` and the skills under `skills/`). So "this repo as a plugin" means: we add the new Python skills as folders under `skills/`, add their names to the manifest, and you install this repository the same way you install Matt's. Two install commands, one machine, everything current. You never copy files by hand.
+
+## 10. `py-health`: the deterministic bad-code suite
+
+Nothing published does this as one tool, but the pieces are mature and each is a pass/fail command. `py-health` wires them together, runs them, and writes one report with a score per axis and the worst offenders by file. It is the numeric half of the brownfield orientation and the thing the mentor persona points at when it says "this file is the problem".
+
+| Axis | Tool | What it catches |
+|---|---|---|
+| Lint, style, common bugs, security smells | `ruff` with the fault-catalogue rule set (`B`, `S`, `BLE`, `C90`, `PL`, `T20`, `ERA`, `D`, `PT`, `SIM`, `RET`, `ARG`) | Mutable defaults, blind excepts, prints, commented-out code, complexity, unused arguments, test smells. |
+| Complexity and maintainability | `radon` (cyclomatic complexity, maintainability index) gated by `xenon` | The 10k-line file scores as F; functions over a threshold fail. |
+| Dead code | `vulture` | Unused functions, classes, imports, variables. |
+| Duplication | `pylint --disable=all --enable=duplicate-code` or `jscpd` | Near-duplicate blocks across files. |
+| Security | `bandit` | Hard-coded secrets, injection, unsafe deserialisation. |
+| Architecture | `import-linter` layers contract | Domain importing adapters, cycles, entrypoints bypassing the application layer. |
+| Types | `mypy --strict` error count | `Any` leakage, untyped surfaces. |
+| Test strength | `mutmut` (mutation testing) | The direct answer to fake tests: it edits the code (flips a `<` to `<=`, deletes a line) and re-runs the suite. A test that still passes never tested anything. Survivor rate is the score. |
+| Test hygiene | custom gate | Tests with no assertion, assertion-free `pass` bodies, `skip` markers without a reason, prompt-shaped comments in test bodies. |
+| Size | custom gate | Modules over N lines, functions over M lines, files named `utils`/`helpers`/`common`/`misc`. |
+
+Mutation testing is slow, so it runs on demand and on a schedule, not on every commit. Everything else runs in pre-commit on changed files and in CI on the whole repo.
+
+## 11. The canonical examples, and why these three
+
+| Repo | Stars (order of magnitude) | What it demonstrates | Where it lives in `py-design` |
+|---|---|---|---|
+| `psf/requests` | ~50k, universally known | A **deep module**: eight public functions in `api.py` (`get`, `post`, ...) hiding ~6,000 lines of sessions, adapters, auth, cookies, retries. Callers learn one function; the implementation absorbs everything. Its `adapters.py` is also a textbook adapter seam (`HTTPAdapter` behind `BaseAdapter`). | The "what depth looks like" section. |
+| `cosmicpython/code` | ~1k, but the reference implementation of the O'Reilly book *Architecture Patterns with Python* | **Ports and adapters** in plain Python: `domain/` (models, commands, events, imports nothing), `service_layer/` (handlers, unit of work, message bus), `adapters/` (repository, ORM, notifications, Redis), `entrypoints/` (Flask, Redis consumer), `bootstrap.py` as the one composition root, and tests split `unit/` `integration/` `e2e/`. This is exactly the layering the import-linter contract enforces. | The layout template and the layering rules. |
+| `dlt-hub/dlt` | several thousand, production data-engineering library | The **extract → normalise → load** shape you described, at scale: `sources/` (one package per external system), `extract/` (resources, incremental state), `normalize/` (one place that turns raw items into a typed schema), `load/` and `destinations/` (one writer contract, many backends behind `common/destination/reference.py`). Adapter in, common shape in the middle, one writer out. | The worked example for data projects, and the counter-example for "each source has its own writer". |
+
+The agent quotes these by path when it explains a recommendation, so a human can go and read the real thing.
+
+## 12. Additional skills from these decisions
+
+| Skill | Job |
+|---|---|
+| `py-health` | Run the suite in §10; write `docs/health/<date>.md`; feed the orientation and the mentor's first grilling round. |
+| `py-orient` (part of `py-intake` on brownfield) | Read everything; produce the orientation page; list every undocumented decision found in the code; start a grilling round on them; record answers as `CONTEXT.md` terms and ADRs; propose the first three improvement tickets. |
+| `adk-migrate` | Detect ADK 1.x patterns (`SequentialAgent`/`LoopAgent`/`ParallelAgent`, `_run_async_impl` overrides, direct `session.events.append`, broad `except` inside tools, rigid custom session tables) and rewrite them to 2.x (`Workflow` graphs, callbacks, yielded events, narrow excepts, schema update), as expand → migrate → contract tickets with the eval suite green at each step. |
