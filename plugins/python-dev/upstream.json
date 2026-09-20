@@ -61,7 +61,8 @@
         "adk-architecture": "model",
         "adk-debug": "model",
         "adk-style": "model"
-      }
+      },
+      "only_when_dependency": "google-adk"
     }
   ]
 }

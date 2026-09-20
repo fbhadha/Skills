@@ -1,6 +1,6 @@
 ---
 name: py-health
-description: One report on where a Python repo is ugly and what to fix first. Use when the user asks "where is this repo bad", "what should we clean up", "how healthy is this", before planning refactoring, at intake on a brownfield repo, or on a schedule. Runs Repowise health, dead code, doc drift and the test-quality markers, then the line-level counts and, on request, mutation testing. Prints; writes nothing. Repowise keeps the history.
+description: One report on where the repo is ugly and what to fix first: Repowise health, dead code, doc drift, test-quality markers, linter counts, optional mutation testing. Writes nothing. Use for cleanup planning.
 license: Apache-2.0
 metadata:
   author: fbhadha

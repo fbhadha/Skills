@@ -1,6 +1,6 @@
 ---
 name: pack-data-engineering
-description: Knowledge pack for data engineering, analytics and data management repos in Python (dlt, pandas, polars, pyarrow, SQLAlchemy, DuckDB, dbt, pandera). Reference only. Use when the repo's dependencies match, when designing or reviewing a pipeline, a source, a sink, a transform, a schema, or a load, or when a DataFrame is about to cross a layer boundary. Selected automatically by py-intake from pyproject.toml.
+description: Knowledge pack for data engineering repos (dlt, pandas, polars, pyarrow, SQLAlchemy, DuckDB, dbt, pandera): shapes, canonical repo, extra checks, faults, tests. Reference only; selected by py-intake.
 license: Apache-2.0
 metadata:
   author: fbhadha

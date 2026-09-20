@@ -1,6 +1,6 @@
 ---
 name: py-intake
-description: Set up a Python repo for the python-dev agent, or re-orient in one. Detects greenfield or brownfield, the git remote, the toolchain and ADK; applies the baseline; indexes with Repowise; on an existing repo reads what Repowise found back to the user in plain words and grills them on the undocumented decisions; writes the docs a junior reader needs; wires the harness shells. Idempotent and resumable. Also `py-intake later` to review the "not now" list.
+description: Set up a Python repo for python-dev or re-orient in one: explore, mode, tracker, baseline, Repowise index, brownfield read-back and grilling, the human docs, harness shells. Resumable. `py-intake later` reviews parked tickets.
 license: Apache-2.0
 metadata:
   author: fbhadha
@@ -20,8 +20,7 @@ Run once per repo, and again whenever you come back after a long gap. Every step
 |---|---|---|
 | `uv`, `git` | on PATH | stop; say how to install |
 | `repowise` | `uv run repowise --version` or on PATH | `uv add --group dev repowise` (Python 3.11 or newer) |
-| Matt Pocock's skills | `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/find_skill.py" grilling` (and `setup-matt-pocock-skills`, `grill-with-docs`) prints a path | say: `mattpocock-skills` plugin on Claude Code, `npx skills@latest add mattpocock/skills` elsewhere; continue, but steps 3 and 6 wait until it is installed |
-| Repowise's skills | `find_skill.py codebase-exploration` (and the other five: `pre-modification-check`, `architectural-decisions`, `code-health`, `change-review`, `dead-code-cleanup`) prints a path | say: `repowise` plugin on Claude Code (`/plugin marketplace add repowise-dev/repowise`), `repowise agents add --target=<codex|vscode>` elsewhere; continue with the CLI (`repowise health`, `dead-code`, `context`, `why`) |
+| Upstream skills | `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/find_skill.py" --door-check` prints nothing missing | it prints the install command per upstream; continue, but steps 3 and 6 wait for Matt Pocock's skills, and the Repowise skills fall back to the CLI (`repowise health`, `dead-code`, `context`, `why`) |
 
 Never improvise a missing skill's behaviour.
 

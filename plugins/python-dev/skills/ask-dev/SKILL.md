@@ -1,6 +1,6 @@
 ---
 name: ask-dev
-description: Decide the next step and start it. Use when the user asks what to do next, which flow fits, how to start on a repo, or when a session begins with python-dev as the agent. Reads the repo's mode, glossary, tracker and Repowise state, checks the upstream skills are installed, names one next step with the reason, and runs it. The user never needs to know a skill's name.
+description: Decide the next step and start it. Use at session start, or when the user asks what to do next or how to begin on a repo. Reads mode, glossary, tracker and Repowise state; runs the door check.
 license: Apache-2.0
 metadata:
   author: fbhadha
@@ -16,7 +16,7 @@ You don't remember every skill, so ask. This is the router over four layers: Mat
 
 - `docs/agents/mode.md`. Missing means the repo is not set up: the answer is `py-intake`, nothing else.
 - `CONTEXT.md`, `docs/agents/issue-tracker.md`, the Repowise section of `AGENTS.md` (health line, last-indexed commit), the `docs/howto/` listing, and any open ticket the user names.
-- The door check: confirm Matt Pocock's `grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `diagnosing-bugs`, `prototype`, `research` and Repowise's `codebase-exploration`, `pre-modification-check`, `architectural-decisions`, `code-health`, `change-review`, `dead-code-cleanup` are installed under those names. Report any that are missing and how to install them (`mattpocock-skills` and `repowise` plugins on Claude Code; `npx skills@latest add mattpocock/skills` and `repowise agents add` elsewhere). Do not improvise a missing skill's behaviour.
+- The door check: `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/find_skill.py" --door-check`. It prints every upstream skill that is not installed and the install command. Report it; do not improvise a missing skill's behaviour.
 
 ## 2. Place the user on a flow
 

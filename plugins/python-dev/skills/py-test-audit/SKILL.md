@@ -1,6 +1,6 @@
 ---
 name: py-test-audit
-description: Audit a test directory and say which tests are real. Use when the user does not trust the tests, asks "are these tests any good", suspects tests were written to pass, or before refactoring a module whose tests must catch regressions. Classifies every test, cites Repowise's test-quality markers and optional mutation results, and proposes deletions and rewrites at the right seam. Proposes; never deletes without the user's word.
+description: Classify every test in a directory with evidence (Repowise test-quality markers, coverage, mutation results) and propose deletions and rewrites. Use when tests are not trusted or before refactoring a module.
 license: Apache-2.0
 metadata:
   author: fbhadha

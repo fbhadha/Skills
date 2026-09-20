@@ -28,7 +28,17 @@ It stands on three maintained upstreams, installed from their own repositories a
 | [Repowise](https://github.com/repowise-dev/repowise) | codebase intelligence: structure, blast radius, why, health, dead code, change risk; the one store for everything derived from the code | `pip install repowise`; `/plugin marketplace add repowise-dev/repowise`, `/plugin install repowise@repowise` |
 | [Google's ADK skills](https://github.com/google/adk-python) | framework knowledge for Agent Development Kit repos | `py-intake` installs them when the repo depends on `google-adk` |
 
-What is ours: the persona, the Python craft rules and fault catalogue, the repo baseline (tool tables, commit gate, CI, docs a junior reader can continue from), the intake that orients in an existing repo and grills you on its undocumented decisions, the implement, review, test-audit and health flows, ADK build and 1.x to 2.x migration, and knowledge packs. How it all fits together, in one document: [plugins/python-dev/HOW-IT-WORKS.md](plugins/python-dev/HOW-IT-WORKS.md). Inventory and install: [plugins/python-dev/README.md](plugins/python-dev/README.md). Design and the decisions behind it: [docs/design/python-dev-agent.md](docs/design/python-dev-agent.md), [docs/adr/](docs/adr/), [docs/research/](docs/research/).
+What is ours: the persona, the Python craft rules and fault catalogue, the repo baseline (tool tables, commit gate, CI, docs a junior reader can continue from), the intake that orients in an existing repo and grills you on its undocumented decisions, the implement, review, test-audit and health flows, ADK build and 1.x to 2.x migration, and knowledge packs. Inventory and install: [plugins/python-dev/README.md](plugins/python-dev/README.md).
+
+### How it works
+
+- **You talk; it runs the flow.** At session start the persona decides the next step and starts it. Matt Pocock's flows it cannot invoke through the harness it runs by reading their skill files. You never type a skill name.
+- **Intake first.** On a repo it has not seen, it explores and shows you the facts, sets guide mode and the tracker (your remote decides), applies the baseline and proves each check bites, indexes with Repowise, and writes the docs a junior reader needs: `AGENTS.md` pointers, `CONTEXT.md` glossary, ADRs, how-tos, the rules-only architecture doc. On an existing repo it reads the codebase back to you in plain words and grills you on the undocumented decisions it found.
+- **Shapes and how-tos.** A how-to is the recipe for one kind of addition the repo makes, mirrored on an example that compiles. A ticket that fits a how-to is built by it; one that leaves its layers is a new shape and gets the interview first. Docs first, then code.
+- **One ticket, one session.** Grill, spec and tickets in one window; then a handoff document and a fresh session per ticket. Each ticket is built test-first, checked after every slice, gated by Repowise before review, reviewed on four axes, committed with the decision in the message.
+- **One store.** Everything derived from the code is read from Repowise. Decisions are written only as ADRs. Rules a machine can enforce live in `pyproject.toml`, not in prose.
+
+The long version, start to finish: [docs/how-python-dev-works.md](docs/how-python-dev-works.md). Design and the decisions behind it: [docs/design/python-dev-agent.md](docs/design/python-dev-agent.md), [docs/adr/](docs/adr/), [docs/research/](docs/research/).
 
 Version 0.1.0 is a first release for testing on real repositories; see its [CHANGELOG](plugins/python-dev/CHANGELOG.md) for known gaps.
 

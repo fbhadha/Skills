@@ -1,6 +1,6 @@
 ---
 name: adk-migrate
-description: Move a Google ADK 1.x codebase to 2.x. Use when py-intake or adk-build finds google-adk 1.x, deprecated SequentialAgent, LoopAgent, ParallelAgent, _run_async_impl overrides, AgentConfig, direct session event appends, or ctx.state writes. Detects every 1.x pattern mechanically, forces only what silently breaks on 2.x, tickets the rest as later, and runs the migration as expand, migrate, contract with an eval suite written first.
+description: Move a Google ADK 1.x codebase to 2.x: detect every 1.x pattern mechanically, force only what silently breaks, evals first, tickets as expand, migrate, contract. Use when py-intake or adk-build finds 1.x.
 license: Apache-2.0
 metadata:
   author: fbhadha

@@ -1,6 +1,6 @@
 ---
 name: py-review
-description: Review a Python branch or diff since a fixed point on four axes and report before fixing anything. Use when the user asks to review a branch, a PR, a merge request or work in progress, when py-implement finishes, or asks "is this safe to merge". Standards and Spec from Matt Pocock's code-review, Change from Repowise, Craft from the py-reviewer agent with the fault catalogue. Each finding carries a one-sentence why.
+description: Review a diff since a fixed point on four axes and report before fixing: Standards and Spec (Matt Pocock's code-review), Change (Repowise), Craft (py-reviewer). Use for a branch, PR, MR or work in progress.
 license: Apache-2.0
 metadata:
   author: fbhadha

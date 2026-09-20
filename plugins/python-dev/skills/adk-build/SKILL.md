@@ -1,6 +1,6 @@
 ---
 name: adk-build
-description: Build or change a Google ADK (Agent Development Kit) 2.x agent in a repo that has the python-dev baseline. Use when the repo depends on google-adk and the work touches an agent, a workflow, a tool, a node, human-in-the-loop, or agent tests. Routes into Google's own adk-agent-builder, adk-architecture, adk-debug and adk-style skills, installed from google/adk-python, and adds the layout, test tiers and craft rules this baseline requires. Not for ADK 1.x code; that is adk-migrate first.
+description: Build or change a Google ADK 2.x agent, workflow, tool or node. Routes into Google's adk-agent-builder, adk-architecture, adk-debug and adk-style and adds this baseline's layout, test tiers and craft rules. Not for 1.x.
 license: Apache-2.0
 metadata:
   author: fbhadha

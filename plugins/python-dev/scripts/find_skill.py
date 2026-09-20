@@ -9,6 +9,7 @@ door check uses it too: a skill is installed when this finds it.
 Usage:
     python3 find_skill.py grill-with-docs
     python3 find_skill.py grilling tdd code-review      # one path per line
+    python3 find_skill.py --door-check                  # every skill in upstream.json
 
 Exit codes: 0 every name was found; 1 at least one was not (the missing names
 and the directories searched go to stderr).
@@ -22,6 +23,7 @@ is <name> (some skills live in a directory named differently).
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import sys
@@ -86,10 +88,33 @@ def find(name: str) -> Path | None:
     return None
 
 
+def door_check() -> int:
+    """Check the skills in upstream.json; print what is missing and how to install it."""
+    manifest = Path(__file__).resolve().parent.parent / "upstream.json"
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    missing = 0
+    pyproject = CWD / "pyproject.toml"
+    deps = pyproject.read_text(encoding="utf-8", errors="replace") if pyproject.exists() else ""
+    for upstream in data["upstreams"]:
+        needs = upstream.get("only_when_dependency")
+        if needs and needs not in deps:
+            continue
+        absent = [name for name in upstream["skills"] if find(name) is None]
+        if absent:
+            missing += len(absent)
+            print(f"missing from {upstream['repo']}: {', '.join(absent)}")
+            print(f"  install: {upstream['install']}")
+    if missing == 0:
+        print("door check: every upstream skill is installed")
+    return 1 if missing else 0
+
+
 def main(names: list[str]) -> int:
     if not names:
         print(__doc__, file=sys.stderr)
         return 1
+    if names == ["--door-check"]:
+        return door_check()
     missing: list[str] = []
     for name in names:
         path = find(name)

@@ -1,6 +1,6 @@
 ---
 name: py-implement
-description: Build one ticket or a small spec, test-first, by the repo's how-to, with the checks green and a review at the end. Use when a ticket is ready, when a handoff document names one, or when a grilled idea is small enough for one session. One ticket per session. Wraps Matt Pocock's implement with the Python craft rules, the Repowise pre-edit checks, the read-only-tests rule and the commit and hand-off discipline.
+description: Build one ticket test-first by the repo's how-to, with Repowise pre-edit checks, checks after each slice, review, commit and handoff. Use when a ticket is ready or a handoff names one. One ticket per session.
 license: Apache-2.0
 metadata:
   author: fbhadha

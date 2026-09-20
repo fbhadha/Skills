@@ -2,7 +2,7 @@
 
 A senior Python engineer as a selectable agent. It builds by your repo's own how-tos, explains every step in plain words, pushes back on scope creep, and keeps deterministic checks green. Process comes from Matt Pocock's skills, framework knowledge from Google's own ADK skills in `google/adk-python`, codebase intelligence from Repowise. All three are installed from their maintainers' repos and called by name, never copied. Craft, checks and packs come from here.
 
-Start with [HOW-IT-WORKS.md](HOW-IT-WORKS.md): the pieces, what a repo gets, where the how-tos come from, a session start to finish, and where to change what. Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in this repository.
+How it all fits together: [docs/how-python-dev-works.md](../../docs/how-python-dev-works.md) in this repository. Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in this repository.
 
 ## Install
 
@@ -68,6 +68,29 @@ One read path and one write path per kind of knowledge. Everything derived from 
 Line-level at commit: ruff (bugbear, blind except, security, print, commented-out code, prompt-shaped TODOs and docstrings, complexity, boolean flags, banned grab-bag modules), mypy strict on `src/`, import-linter layers, pylint module length, detect-secrets. Whole-repo and per-change: [Repowise](https://github.com/repowise-dev/repowise) health score, duplication, dead code, assertion-free tests, and a CI gate that fails when a diff makes a touched file worse. On demand: mutmut, bandit. Why this split: `docs/research/repowise.md`.
 
 Repowise is AGPL-3.0 and is used as a development tool only. Set `DO_NOT_TRACK=1` (the templates do) to switch off its telemetry.
+
+## Context cost
+
+What a harness loads every turn from this plugin is the persona and every skill's name and description. Skill bodies load only when a skill runs, and `references/` files only when a skill opens them. Estimated at 3.6 characters per token:
+
+| Always loaded | Tokens |
+|---|---|
+| Persona (`agents/python-dev.md`) | ~1,650 |
+| 11 skill descriptions | ~630 |
+| Total from this plugin | ~2,300 (was ~3,900 before the 0.1.0 trim) |
+
+| Loaded on demand | Tokens |
+|---|---|
+| The largest skill body (`py-intake`, runs once per repo) | ~3,200 |
+| A typical skill body | 800 to 1,500 |
+| `py-design` references (fault catalogue, canonical examples, worked example) | ~3,300, opened one at a time |
+
+Levers, in order of effect:
+
+1. **Repowise's MCP surface** is the biggest cost outside this plugin: ten tool definitions per session by default. Its `lean` profile trims that to six for tight budgets (see `docs/agent/INTEGRATIONS.md` in the Repowise repo). Without MCP the skills fall back to the CLI and cost nothing per turn.
+2. **Matt's and Google's skills** add their own descriptions when installed; only the four ADK skills are installed, and only in ADK repos.
+3. **Packs** are selected per repo; an unselected pack costs its description only.
+4. **Smaller models.** Everything here is plain steps and tables, nothing depends on a tool the harness might not have, and the persona fits in a page, so a smaller model can follow it. What a smaller model will do worse is the judgement in `py-review`'s Craft axis and in grilling; the mechanical checks (ruff, mypy, import-linter, the Repowise gate) do not get weaker.
 
 ## Licence
 
