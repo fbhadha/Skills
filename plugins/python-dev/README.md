@@ -2,7 +2,7 @@
 
 A senior Python engineer as a selectable agent. It builds by your repo's own how-tos, explains every step in plain words, pushes back on scope creep, and keeps deterministic checks green. Process comes from Matt Pocock's skills, framework knowledge from Google's own ADK skills in `google/adk-python`, codebase intelligence from Repowise. All three are installed from their maintainers' repos and called by name, never copied. Craft, checks and packs come from here.
 
-Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in this repository.
+Start with [HOW-IT-WORKS.md](HOW-IT-WORKS.md): the pieces, what a repo gets, where the how-tos come from, a session start to finish, and where to change what. Design and evidence: `docs/design/python-dev-agent.md` and `docs/research/` in this repository.
 
 ## Install
 
