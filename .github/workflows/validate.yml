@@ -49,3 +49,15 @@ jobs:
             -e 'rm[[:space:]]+-rf[[:space:]]+/' \
             -e 'eval[[:space:]]+.*\$\(' \
             skills/ plugins/ || (echo "::warning::Risky pattern found above — require manual security review." && true)
+
+  upstream-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Every upstream skill we call by name exists at its pinned commit with the expected invocation
+        run: python scripts/check_upstream_skills.py
+      - name: Report drift on the upstream default branches (advisory)
+        run: python scripts/check_upstream_skills.py --latest

@@ -168,8 +168,7 @@ fbhadha/Skills/
 │   │   ├── hooks/hooks.json            format-on-edit, deny destructive git, deny weakened tests, stop-gate on red checks
 │   │   └── scripts/                    the hook scripts and the gate implementations
 ├── scripts/
-│   ├── render_harness_shells.py        persona body -> .github/agents/*.agent.md and the AGENTS.md section; CI fails on drift
-│   ├── check_pocock_refs.py            every skill we call by name must exist upstream at the pinned sha and be model-invoked
+│   ├── check_upstream_skills.py        every skill we call by name (Matt's, Repowise's, Google's) exists at the pinned commit with the invocation we assume
 │   └── check_invocation_sync.py        disable-model-invocation: true  <=>  openai.yaml policy.allow_implicit_invocation: false
 └── docs/adr/                           this repo's own decisions
 ```
@@ -236,6 +235,7 @@ fbhadha/Skills/
 | 21 | **The agent runs every flow, including Matt's user-invoked skills.** Where the Skill tool refuses a skill, the persona locates its `SKILL.md` with `scripts/find_skill.py` and follows it in the conversation. `ask-dev` names the next step and starts it. The user talks; they never type a skill name. | §13.5 correction 1 rewritten. `py-intake` runs `setup-matt-pocock-skills` itself with the answers it already knows. |
 | 22 | **Session boundaries are explicit.** After `to-spec` and after `to-tickets` the agent runs Matt's `handoff` with the next step as its argument and tells the user to open a fresh session with the document; `py-implement` is one ticket per session and hands off the same way. A session that starts with a handoff path reads it, then `AGENTS.md`, and never re-asks what it answers. | Persona "Session boundaries"; `ask-dev` row. Keeps each build inside the smart zone Matt's `ask-matt` describes. |
 | 23 | **Google's ADK skills are installed from Google's repo, not vendored.** `npx skills@latest add google/adk-python -s adk-agent-builder,adk-architecture,adk-debug,adk-style` puts them in `.agents/skills/` where `find_skill.py` finds them; the other seven are for adk-python contributors. The `adk-skills` plugin and `sync_adk_skills.py` are dropped. `adk-build` routes into Google's skills and adds the baseline; `adk-migrate` detects 1.x mechanically and forces only what silently breaks. | Same rule as Matt's and Repowise's: one maintainer, one install, called by name. Verified 2026-09-20 against adk-python at d57c84f (ADK 2.9). |
+| 24 | **No rendered copies of the persona in this repo.** `py-intake` renders the Copilot agent file and the Codex `AGENTS.md` section in the target repo from the one persona file at intake time, so there is nothing here to drift and `render_harness_shells.py` is dropped. `check_upstream_skills.py` replaces `check_pocock_refs.py` and covers all three upstreams from `plugins/python-dev/upstream.json`. | One persona file. CI clones the three upstreams at their pins on every change and reports drift on their default branches. |
 
 ## 15. Build order
 
@@ -243,5 +243,5 @@ fbhadha/Skills/
 2. `py-intake` with the health suite, the brownfield orientation and auto-grill, the tracker rule (including the Backlog.md template), the three human docs, and the harness shells.
 3. `py-implement`, `py-review` (with the `py-reviewer` agent), `py-test-audit`.
 4. `adk-build` and `adk-migrate` over Google's own skills (installed, not vendored; decision 23); the data-engineering pack and the pack template. (built)
-5. CI: skill validation, invocation sync, upstream name check, persona drift check, `claude plugin validate --strict`.
-6. First release: version 0.1.0, you run it on the GitLab repo, report back.
+5. CI: skill validation, invocation sync, upstream skill check against pinned commits (`scripts/check_upstream_skills.py`, all three upstreams), `claude plugin validate --strict` run locally before a release. (built; the persona drift check is dropped, decision 24)
+6. First release: version 0.1.0, you run it on the GitLab repo, report back. (built: `plugins/python-dev/CHANGELOG.md`; install with `--plugin-dir` from a clone of this branch)

@@ -28,6 +28,7 @@
     "./skills/py-test-audit",
     "./skills/adk-build",
     "./skills/adk-migrate",
-    "./skills/pack-data-engineering"
+    "./skills/pack-data-engineering",
+    "./skills/py-health"
   ]
 }

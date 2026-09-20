@@ -16,6 +16,16 @@ Prerequisites in every harness: `uv`, Python 3.11 or newer, Matt Pocock's skills
 
 Then, in the target repo, say what you want; the agent runs `py-intake` first if the repo is not set up. You never type a skill name: the agent runs Matt's flows too, by reading their skill files when the harness refuses to invoke them (`scripts/find_skill.py`). After `to-spec` and after `to-tickets` it writes a handoff document and tells you to open a fresh session with it; each ticket is one session. It applies the baseline (`skills/py-baseline`), sets up the tracker, writes the three human docs, and on an existing repo orients itself and grills you about the undocumented decisions.
 
+## Try it before it is on a marketplace
+
+From a clone of this repository, in the repo you want to work on:
+
+```bash
+claude --agent python-dev --plugin-dir /path/to/Skills/plugins/python-dev
+```
+
+That loads the plugin for the session only and starts with the persona. Its first turn runs `ask-dev`, which runs `py-intake` when the repo is not set up. Matt Pocock's and Repowise's plugins still need to be installed as above; the door check names whatever is missing.
+
 ## What is in the box
 
 | Path | What |
@@ -32,11 +42,13 @@ Then, in the target repo, say what you want; the agent runs `py-intake` first if
 | `skills/adk-build` | Google ADK 2.x work: routes into Google's own skills, installed from `google/adk-python`, and adds this baseline's layout, test tiers and craft rules |
 | `skills/adk-migrate` | ADK 1.x to 2.x: mechanical detection, force only what silently breaks, evals first, expand, migrate, contract |
 | `skills/pack-data-engineering` | knowledge pack for pipelines, sources, sinks and frames; `packs/TEMPLATE.md` is the shape for new packs |
+| `skills/py-health` | one report on where the repo is ugly and what to fix first, from Repowise and the linters; writes nothing |
+| `upstream.json` | the skills we call by name in Matt Pocock's, Repowise's and Google's repos, pinned; `scripts/check_upstream_skills.py` in this repo's CI verifies them |
 | `hooks/hooks.json` | in-session guards (below) |
 | `scripts/hooks/` | the hook scripts |
 | `scripts/find_skill.py` | locates an installed skill's `SKILL.md` by name across Claude Code, Copilot and Codex install directories; the door check and the persona use it |
 
-Coming next: `py-health` and the release checks (design §15, steps 5 and 6).
+Version 0.1.0. See `CHANGELOG.md`.
 
 ## Hooks (Claude Code)
 
