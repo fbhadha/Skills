@@ -1,6 +1,6 @@
 # Design proposal: the Python developer agent
 
-Status: draft for grilling. Nothing here is decided until you say so.
+Status: sections 1 to 7 are the original draft; sections 8 to 15 record decisions taken with Firdaush on 2026-09-20 and supersede the draft where they conflict.
 
 Built from [matt-pocock-skills.md](../research/matt-pocock-skills.md) and [python-craft-and-llm-faults.md](../research/python-craft-and-llm-faults.md), and your answers on 2026-09-20.
 
@@ -118,3 +118,117 @@ The agent quotes these by path when it explains a recommendation, so a human can
 | `py-health` | Run the suite in §10; write `docs/health/<date>.md`; feed the orientation and the mentor's first grilling round. |
 | `py-orient` (part of `py-intake` on brownfield) | Read everything; produce the orientation page; list every undocumented decision found in the code; start a grilling round on them; record answers as `CONTEXT.md` terms and ADRs; propose the first three improvement tickets. |
 | `adk-migrate` | Detect ADK 1.x patterns (`SequentialAgent`/`LoopAgent`/`ParallelAgent`, `_run_async_impl` overrides, direct `session.events.append`, broad `except` inside tools, rigid custom session tables) and rewrite them to 2.x (`Workflow` graphs, callbacks, yielded events, narrow excepts, schema update), as expand → migrate → contract tickets with the eval suite green at each step. |
+
+
+## 13. Harness portability: how the agent is packaged for Claude Code, Copilot, and Codex
+
+Verified 2026-09-20 against the Claude Code docs (CLI 2.1.278), the GitHub Copilot docs source (`github/docs`, CLI changelog to 1.0.86), the OpenAI Codex source (`openai/codex` at rust-v0.155.1), and the Agent Skills spec repo. Anything not exercised on a live harness is marked UNVERIFIED.
+
+### 13.1 The plain answer
+
+**Is this an agent you can select?** In Claude Code and GitHub Copilot, yes: a named agent called `python-dev` that you pick, and it takes over the session with its own persona. In OpenAI Codex there is no agent picker at all, so the same persona is written into the repo's `AGENTS.md`, which Codex reads on every turn; you don't select it, it is simply on in that repo.
+
+**Does it know everything we discussed?** It knows what is written in files, and nothing else. An agent in these harnesses is a system prompt, a set of tools, a model, and the skills it can reach. It has no memory of this conversation. Everything we decided lives in three places it reads every session: the persona file, the skills, and the target repo's own docs (`CONTEXT.md`, ADRs, `docs/agents/`, the how-tos). That is by design: it is what makes the fresh-eyes test passable and what lets the same agent behave the same in three harnesses.
+
+**Harness** is the word for the program that runs the model and its tools (Claude Code, Copilot, Codex). The **agent** is what runs inside it.
+
+### 13.2 What you do in each harness
+
+| | Claude Code | GitHub Copilot (CLI, VS Code, github.com) | OpenAI Codex |
+|---|---|---|---|
+| Install Matt's layer | `claude plugins install mattpocock-skills` | `npx skills@latest add mattpocock/skills` | `npx skills@latest add mattpocock/skills` |
+| Install ours | `/plugin marketplace add fbhadha/Skills` then `/plugin install python-dev@community-skills` | `npx skills@latest add fbhadha/Skills` (skills only); plugin route `copilot plugin install fbhadha/Skills:plugins/python-dev` is documented but UNVERIFIED | `npx skills@latest add fbhadha/Skills`; plugin route via `codex plugin marketplace add` reads our `.claude-plugin/plugin.json` in source but is UNVERIFIED |
+| First run in a repo | `/py-intake` | `/py-intake` | `$py-intake` |
+| Select the agent | `claude --agent python-dev`, or intake writes `"agent": "python-dev"` into `.claude/settings.json` so plain `claude` starts as it | `/agent` picker or `copilot --agent python-dev`; on github.com, the agents dropdown; intake writes `.github/agents/python-dev.agent.md` | Nothing to select. Intake writes the persona into `AGENTS.md`; you type `$ask-dev` to start |
+| What the persona is, technically | The main thread's system prompt (replaces Claude Code's default prompt entirely) | A subagent with its own context that the main agent delegates to; `include-custom-instructions: true` lets it see `AGENTS.md` | A section of `AGENTS.md`, plus an optional `.codex/agents/py-reviewer.toml` role for fresh-context review |
+| Skills reachable as | `/python-dev:py-review` (bare `/py-review` when unambiguous) | `/py-review` | `$py-review`, or the model opens `SKILL.md` |
+| Hooks (fast in-session guards) | plugin `hooks/hooks.json` plus repo `.claude/settings.json` | repo `.github/hooks/python-dev.json` (the only file the cloud agent reads) | repo `.codex/hooks.json`, same JSON shape; return contracts partly UNVERIFIED |
+| The floor that never degrades | pre-commit + CI in the target repo | same | same |
+
+### 13.3 One source tree
+
+```
+fbhadha/Skills/
+├── .claude-plugin/marketplace.json     existing; add entries for python-dev and adk-skills
+├── skills/                             the 9 existing community skills, untouched
+├── plugins/
+│   ├── python-dev/                     THE AGENT PLUGIN (one directory, three loaders)
+│   │   ├── .claude-plugin/plugin.json  read by Claude Code natively, by Codex and Copilot as a legacy manifest
+│   │   ├── agents/python-dev.md        the persona; body = system prompt (Claude Code and Copilot)
+│   │   ├── agents/py-reviewer.md       craft-axis reviewer: Read/Grep/Glob/Bash only, no Agent tool (cannot recurse), no Edit
+│   │   ├── skills/                     ask-dev, py-design, py-baseline, py-intake, py-implement, py-review,
+│   │   │                               py-test-audit, py-health, adk-build, adk-migrate (each with agents/openai.yaml)
+│   │   ├── hooks/hooks.json            format-on-edit, deny destructive git, deny weakened tests, stop-gate on red checks
+│   │   └── scripts/                    the hook scripts and the gate implementations
+│   └── adk-skills/                     Google's adk-* skills vendored verbatim, Apache-2.0, NOTICE + UPSTREAM.json,
+│                                       refreshed only by scripts/sync_adk_skills.py at a pinned commit
+├── scripts/
+│   ├── render_harness_shells.py        persona body -> .github/agents/*.agent.md and the AGENTS.md section; CI fails on drift
+│   ├── check_pocock_refs.py            every skill we call by name must exist upstream at the pinned sha and be model-invoked
+│   └── check_invocation_sync.py        disable-model-invocation: true  <=>  openai.yaml policy.allow_implicit_invocation: false
+└── docs/adr/                           this repo's own decisions
+```
+
+### 13.4 What lives where, and why
+
+| Container | Holds | Never holds | Why this container |
+|---|---|---|---|
+| **Persona** (`agents/python-dev.md`, rendered into the Copilot and Codex shells) | Identity, the guide voice, the two-tier pushback, the must-ask list, the checkpoints, the session-start read list, pointers to skills. About a page. | Craft knowledge, procedures over three lines, anything a linter can enforce, anything that changes per repo. | It is the only thing loaded before the first turn and the only thing a harness lets you select by name. Long prompts decay (research §1). |
+| **Skills** (`plugins/python-dev/skills/`) | Procedures and references, loaded on demand. | Persona voice; harness-specific tool names in operative steps (Matt dropped them in 1.2.3 so steps run on Codex). | The Agent Skills format is the only container all three harnesses read from the same files. |
+| **Vendored ADK skills** (`plugins/adk-skills/`) | Google's skills verbatim. | Any hand edit. | Separate plugin keeps the licence boundary to one directory and lets ADK users take it alone. |
+| **Target repo files** (written by `py-intake`) | `AGENTS.md` (pointers only) and `CLAUDE.md` = `@AGENTS.md`; `CONTEXT.md`; `docs/adr/`; `docs/agents/mode.md`, `issue-tracker.md`, `domain.md`; `docs/howto/`; `docs/health/`; `pyproject.toml` tool tables; `.pre-commit-config.yaml`; `ci.yml`; `.env.example`; the harness shells (`.github/agents/`, `.github/hooks/`, `copilot-setup-steps.yml`, `.codex/hooks.json`, `.claude/settings.json`). | Copies of skill bodies. | This is the memory, and the floor. It works with no plugin installed, it is versioned with the code, and it is what a junior reader or a fresh session picks up cold. |
+| **Hooks** | Fast in-session feedback: format after edit, deny `git push --force` and friends, deny a diff that weakens an existing test, block the turn ending while ruff/mypy on changed files are red, inject mode and last health score at session start. | The only enforcement of anything. | Hooks are best-effort and differ per harness (Copilot timeouts fail open; Codex contracts unverified). Pre-commit and CI are the truth. |
+
+### 13.5 Two corrections to the earlier sections
+
+1. **We cannot call Matt's user-invoked skills from ours.** `implement`, `to-spec`, `to-tickets`, `grill-with-docs`, `improve-codebase-architecture`, `setup-matt-pocock-skills`, and `ask-matt` all carry `disable-model-invocation: true`, and Claude Code blocks any Skill-tool call to such a skill; Copilot honours the same flag; Codex hides them unless the user types `$name`. So §3's "`py-implement` wraps `implement`" and "`py-intake` runs `setup-matt-pocock-skills` pre-filled" are not implementable. Resolution: our drivers call only his **model-invoked** skills by name (`grilling`, `domain-modeling`, `tdd`, `code-review`, `codebase-design`, `diagnosing-bugs`, `prototype`, `research`, `wizard`); for his user-invoked ones, ours print the exact command for the human to type and stop. `py-implement` restates his five-line `implement` body (MIT, credited in `NOTICE`) rather than calling it. `scripts/check_pocock_refs.py` enforces this in CI.
+2. **"The plugin updates itself" is only half true.** Claude Code users get a new version only when `version` in `plugin.json` is bumped; Codex needs strict semver; Copilot auto-updates only first-party or opted-in marketplaces. A release is therefore a deliberate version bump here, not a push.
+
+### 13.6 Degradation, honestly
+
+| Harness | Lost | Fallback |
+|---|---|---|
+| Claude Code | Nothing relative to this design. `--agent` replaces the default system prompt, so the persona must carry its own operating basics (mirror the structure of `claude-security/agents/claude-security.md` in the official plugin repo). | Smoke-test `claude --agent python-dev -p` before each release. |
+| Copilot CLI | Main-thread persona (it runs as a delegated subagent); no `initialPrompt`; skill-to-skill chaining reliability UNVERIFIED; `context: fork` only in VS Code. | `include-custom-instructions: true`; user types `/ask-dev`; wrappers keep gate-critical steps inline so a missed chain loses polish, not safety. |
+| Copilot cloud agent (github.com) | Interactivity, so intake and grilling cannot run there; hook `ask` becomes `deny`; no plugins. | Run intake locally first; the persona's non-interactive rule: stop at any one-way door, write the question into the PR body, never merge. `copilot-setup-steps.yml` preinstalls `uv` and the gates. |
+| Codex | Any selectable persona; the Skill tool; `context: fork`; `disable-model-invocation` (ignored); hook return contracts UNVERIFIED. | Persona in `AGENTS.md`; `$name` mentions; the `py-reviewer` role via `spawn_agent`; user-only skills hidden by `policy.allow_implicit_invocation: false` in `agents/openai.yaml`; hooks advisory until a Codex binary is tested. |
+| Any other harness | Selection and hooks. | `AGENTS.md` pointer says "read and follow `.github/agents/python-dev.agent.md`"; `.agents/skills/` if it implements the standard; pre-commit and CI regardless. |
+
+### 13.7 Flaws found in my own adversarial pass (the workflow's attack stage did not run)
+
+- A plugin-root `settings.json` with `{"agent": "python-dev"}` would hijack every session in every repo where the plugin is enabled. Not shipped; the per-repo `.claude/settings.json` key is used instead.
+- Shipping hooks in both the plugin and the target repo makes Copilot CLI run them twice. Accepted because every hook script is idempotent; a later non-idempotent hook would break this and CI will test for it.
+- Hook payload field names differ per harness. A guard that cannot find the command string must exit 0 with no decision, otherwise Copilot's fail-closed pre-tool hook denies every shell call.
+- Non-spec frontmatter (`disable-model-invocation`, `context: fork`) is rejected by the agentskills reference validator and by claude.ai upload. Acceptable: distribution is git and plugins. It closes those channels, and the README will say so.
+- The `.agent.md` filename suffix for a Claude plugin agent is UNVERIFIED; ship `agents/python-dev.md` for Claude Code and render the Copilot copy separately.
+- Name collision: this repo's `community-skills` already ships a `grill-me` that duplicates Matt's. On Copilot and Codex, skills resolve by name first-found-wins. Documented: on those harnesses install only `python-dev` (and `adk-skills`) from this repo.
+- `skills:` preload of a skill from another plugin is undocumented; we preload only our own `py-design`.
+
+## 14. Decisions from the grilling session, 2026-09-20
+
+| # | Decision | Consequence |
+|---|---|---|
+| 1 | Success is the **junior reader**: can read Python, not write it fluently, never saw the repo, cannot ask you. | Documentation is a deliverable with the same weight as code. |
+| 2 | Three human docs per repo, each mechanically checked: `README.md` (commands executed in CI), `docs/architecture.md` (generated from the import-linter contract and ADRs), `docs/howto/add-a-<thing>.md` (mirrors a real `example/` package that compiles and has a test). Plus the **fresh-eyes test**: a new session, docs only, small feature, zero questions is the pass. | Docs that lie fail the build. |
+| 3 | Docs are built at project start or at intake. They are the agent's operating manual. | The how-tos are how the agent builds. |
+| 4 | The **shape** rule: a ticket that matches a how-to is built by template; one that touches anything outside the how-to's named layers is a new shape and the interview is mandatory. Mechanical trigger, plus the agent always asks "this looks like adding another X, correct?" before building. Grilling may end in "extend the existing shape". **Docs first, then code.** | See ADR 0001. |
+| 5 | **Guide mode only.** Plain-language before and after every step, project vocabulary, one paragraph. Partner mode parked as a future one-line switch in `docs/agents/mode.md`. | Halves the surface to build and test. |
+| 6 | **Must ask, every time:** push to main, delete files or data, migrations off a local test DB, new third-party dependency, public interface or schema change, spending money, one-way doors. **Blocked outright by hook:** force-push, hard reset, history rewrite. AFK is earned per ticket by a grilled spec and ends in a PR, never a merge. | See §13.4 hooks row. |
+| 7 | **Scope pushback lives in the plan, not only the docs:** the spec's Out of Scope, the ticket's acceptance criteria, ADRs, `.out-of-scope/` for "never", and a `later` label in the tracker for "not now". Intake shows the `later` list each time and asks what to kill. | The checkpoint in #4 also checks the request against the current ticket. |
+| 8 | **Two-tier pushback.** Design and taste: opinion with costs, twice, then defer and record an ADR when hard to reverse. Process discipline (scope creep, building without a how-to, skipping the interview on a new shape, tests after code, weakening a test): pushes hard, requires an explicit override in your own words, records it. | The mentor is opinionated, not nagging. |
+| 9 | **Python only** for the craft layer in v1; Matt's process layer stays language-agnostic. | JS-heavy projects get process but no craft gates, and the agent says so. |
+| 10 | **Craft core + knowledge packs + project how-tos.** Packs are reference-only skills with a fixed shape (trigger dependencies, shapes, canonical repo, extra checks, fault list), auto-selected at intake from `pyproject.toml`. v1 ships **two packs: ADK and data engineering**, plus the pack template. | Anyone can add a pack by copying the template; this repo's validator checks its shape. |
+| 11 | **Stay coupled to Matt's plugin, with a door check.** Intake and `ask-dev` verify every upstream skill we name exists at session start and report the changelog entry if not. A one-line table here maps his skill → our use → last verified version. | See ADR 0004. |
+| 12 | **Tracker: the remote decides.** GitHub remote → GitHub Issues; GitLab → GitLab Issues; no remote → **Backlog.md** (research: `docs/research/local-trackers.md`), accepting its Node dependency. Public repo → intake warns and offers local. | A new `issue-tracker-backlog-md.md` template mirrors Matt's GitHub one. |
+| 13 | Test in your real GitLab environment; you report back. No synthetic fixture repo here. | Skills go to you checked only for loading and for their commands running. |
+| 14 | **Short persona, deep library.** The persona is about a page of identity, voice, rules, and pointers; expertise lives in `py-design`, the packs, Matt's skills, and the checks. | See §13.4. |
+| 15 | Portability as in §13: Claude Code is the reference experience, Copilot second, Codex the always-on `AGENTS.md` version. One plugin directory, three loaders. | Releases are version bumps. |
+
+## 15. Build order
+
+1. `plugins/python-dev/` skeleton: manifest, persona, `py-design` (craft core with the fault catalogue and the three canonical repos), `py-baseline` templates, `ask-dev`.
+2. `py-intake` with the health suite, the brownfield orientation and auto-grill, the tracker rule (including the Backlog.md template), the three human docs, and the harness shells.
+3. `py-implement`, `py-review` (with the `py-reviewer` agent), `py-test-audit`.
+4. `adk-skills` vendoring script and plugin; `adk-build` and `adk-migrate` (the ADK pack); the data-engineering pack.
+5. CI: skill validation, invocation sync, upstream name check, persona drift check, `claude plugin validate --strict`.
+6. First release: version 0.1.0, you run it on the GitLab repo, report back.

@@ -31,3 +31,15 @@ _Avoid_: plugin (the harness-level bundle), module, library
 **Persona**:
 The short, always-loaded file that defines the agent: identity, guide voice, the two-tier pushback, the must-ask list, the checkpoints, and the pointers that say when to load each piece of knowledge. About a page. Holds no craft knowledge itself.
 _Avoid_: system prompt (harness term), CLAUDE.md (one container it can live in, not the thing)
+
+**Harness**:
+The program that runs the model and its tools: Claude Code, GitHub Copilot, OpenAI Codex. The agent runs inside a harness; the harness decides how a persona is selected, how skills are invoked, and which hooks fire.
+_Avoid_: platform, IDE, runtime
+
+**Agent**:
+The selectable thing we are building: a persona (system prompt), the tools it may use, the model, and the skills it can reach, running inside a harness. It has no memory beyond what is written in files.
+_Avoid_: bot, assistant, copilot (a product name)
+
+**Hook**:
+A harness-native script that runs at a lifecycle point (before a tool call, after an edit, at session start, when the agent tries to stop) and can inject context or block the action. Best-effort and harness-specific; never the only enforcement of a rule.
+_Avoid_: guardrail (that is the rule; the hook is one place it runs), trigger
