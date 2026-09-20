@@ -25,10 +25,11 @@ Then, in the target repo, run `py-intake` once. It applies the baseline (`skills
 | `skills/ask-dev` | which command comes next, from the repo's state |
 | `skills/py-design` | the craft rules, the fault catalogue, three canonical repos to cite |
 | `skills/py-baseline` | the layout, tool tables, commit gate, CI, docs every repo gets, plus templates |
+| `skills/py-intake` | set up a repo or re-orient in one: baseline, Repowise index, brownfield read-back and grill, the three human docs, harness shells; `py-intake later` reviews the parked list |
 | `hooks/hooks.json` | in-session guards (below) |
 | `scripts/hooks/` | the hook scripts |
 
-Coming in the next releases (see design §15): `py-intake`, `py-implement`, `py-review`, `py-test-audit`, `py-health`, `adk-build`, `adk-migrate`, and the `adk-skills` plugin.
+Coming in the next releases (see design §15): `py-implement`, `py-review`, `py-test-audit`, `py-health`, `adk-build`, `adk-migrate`, and the `adk-skills` plugin.
 
 ## Hooks (Claude Code)
 

@@ -21,6 +21,7 @@
   "skills": [
     "./skills/ask-dev",
     "./skills/py-design",
-    "./skills/py-baseline"
+    "./skills/py-baseline",
+    "./skills/py-intake"
   ]
 }

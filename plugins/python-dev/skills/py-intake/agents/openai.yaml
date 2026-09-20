@@ -1,0 +1,5 @@
+interface:
+  display_name: "Python intake"
+  short_description: "Set up a Python repo for python-dev, or re-orient in one"
+policy:
+  allow_implicit_invocation: false
