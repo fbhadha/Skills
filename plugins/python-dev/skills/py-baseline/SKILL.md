@@ -1,6 +1,6 @@
 ---
 name: py-baseline
-description: The baseline every Python repo gets: layout, pyproject tool tables, pre-commit, CI, the Repowise change gate, agent docs. Use when setting up or checking a repo's tooling, checks or docs. Merges, never overwrites.
+description: "The baseline every Python repo gets: layout, pyproject tool tables, pre-commit, CI, the Repowise change gate, agent docs. Use when setting up or checking a repo's tooling, checks or docs. Merges, never overwrites."
 license: Apache-2.0
 metadata:
   author: fbhadha

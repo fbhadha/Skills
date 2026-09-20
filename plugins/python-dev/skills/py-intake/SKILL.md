@@ -1,6 +1,6 @@
 ---
 name: py-intake
-description: Set up a Python repo for python-dev or re-orient in one: explore, mode, tracker, baseline, Repowise index, brownfield read-back and grilling, the human docs, harness shells. Resumable. `py-intake later` reviews parked tickets.
+description: "Set up a Python repo for python-dev or re-orient in one: explore, mode, tracker, baseline, Repowise index, brownfield read-back and grilling, the human docs, harness shells. Resumable. `py-intake later` reviews parked tickets."
 license: Apache-2.0
 metadata:
   author: fbhadha

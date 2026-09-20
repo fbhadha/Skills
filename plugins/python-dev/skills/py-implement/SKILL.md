@@ -1,6 +1,6 @@
 ---
 name: py-implement
-description: Build one ticket test-first by the repo's how-to, with Repowise pre-edit checks, checks after each slice, review, commit and handoff. Use when a ticket is ready or a handoff names one. One ticket per session.
+description: "Build one ticket test-first by the repo's how-to, with Repowise pre-edit checks, checks after each slice, review, commit and handoff. Use when a ticket is ready or a handoff names one. One ticket per session."
 license: Apache-2.0
 metadata:
   author: fbhadha

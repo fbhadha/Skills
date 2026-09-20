@@ -26,7 +26,13 @@ FRONTMATTER_RE = re.compile(r"^---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 
 def frontmatter(path: Path) -> dict:
     match = FRONTMATTER_RE.match(path.read_text(encoding="utf-8"))
-    return yaml.safe_load(match.group(1)) or {} if match else {}
+    if not match:
+        return {}
+    try:
+        return yaml.safe_load(match.group(1)) or {}
+    except yaml.YAMLError as exc:
+        print(f"{path}: frontmatter is not valid YAML: {exc}")
+        return {}
 
 
 def main() -> int:

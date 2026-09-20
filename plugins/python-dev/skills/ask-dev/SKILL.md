@@ -1,6 +1,6 @@
 ---
 name: ask-dev
-description: Decide the next step and start it. Use at session start, or when the user asks what to do next or how to begin on a repo. Reads mode, glossary, tracker and Repowise state; runs the door check.
+description: "Decide the next step and start it. Use at session start, or when the user asks what to do next or how to begin on a repo. Reads mode, glossary, tracker and Repowise state; runs the door check."
 license: Apache-2.0
 metadata:
   author: fbhadha

@@ -1,6 +1,6 @@
 ---
 name: py-review
-description: Review a diff since a fixed point on four axes and report before fixing: Standards and Spec (Matt Pocock's code-review), Change (Repowise), Craft (py-reviewer). Use for a branch, PR, MR or work in progress.
+description: "Review a diff since a fixed point on four axes and report before fixing: Standards and Spec (Matt Pocock's code-review), Change (Repowise), Craft (py-reviewer). Use for a branch, PR, MR or work in progress."
 license: Apache-2.0
 metadata:
   author: fbhadha

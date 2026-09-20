@@ -1,6 +1,6 @@
 ---
 name: adk-build
-description: Build or change a Google ADK 2.x agent, workflow, tool or node. Routes into Google's adk-agent-builder, adk-architecture, adk-debug and adk-style and adds this baseline's layout, test tiers and craft rules. Not for 1.x.
+description: "Build or change a Google ADK 2.x agent, workflow, tool or node. Routes into Google's adk-agent-builder, adk-architecture, adk-debug and adk-style and adds this baseline's layout, test tiers and craft rules. Not for 1.x."
 license: Apache-2.0
 metadata:
   author: fbhadha

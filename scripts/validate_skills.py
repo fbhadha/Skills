@@ -45,7 +45,10 @@ def load_frontmatter(skill_md: Path):
     match = FRONTMATTER_RE.match(text)
     if not match:
         raise ValueError("SKILL.md must begin with YAML frontmatter delimited by ---")
-    return yaml.safe_load(match.group(1)) or {}
+    try:
+        return yaml.safe_load(match.group(1)) or {}
+    except yaml.YAMLError as exc:
+        raise ValueError(f"frontmatter is not valid YAML (quote values that contain ': '): {exc}") from None
 
 
 def main() -> int:

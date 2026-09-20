@@ -1,6 +1,6 @@
 ---
 name: py-design
-description: Python craft reference: rules, the fault catalogue, three canonical repos to cite. Use when designing a module, class, function or layout, placing a seam or Protocol, or reviewing Python for structure faults.
+description: "Python craft reference: rules, the fault catalogue, three canonical repos to cite. Use when designing a module, class, function or layout, placing a seam or Protocol, or reviewing Python for structure faults."
 license: Apache-2.0
 metadata:
   author: fbhadha

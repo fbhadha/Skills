@@ -1,6 +1,6 @@
 ---
 name: adk-migrate
-description: Move a Google ADK 1.x codebase to 2.x: detect every 1.x pattern mechanically, force only what silently breaks, evals first, tickets as expand, migrate, contract. Use when py-intake or adk-build finds 1.x.
+description: "Move a Google ADK 1.x codebase to 2.x: detect every 1.x pattern mechanically, force only what silently breaks, evals first, tickets as expand, migrate, contract. Use when py-intake or adk-build finds 1.x."
 license: Apache-2.0
 metadata:
   author: fbhadha

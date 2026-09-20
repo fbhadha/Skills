@@ -1,6 +1,6 @@
 ---
 name: py-test-audit
-description: Classify every test in a directory with evidence (Repowise test-quality markers, coverage, mutation results) and propose deletions and rewrites. Use when tests are not trusted or before refactoring a module.
+description: "Classify every test in a directory with evidence (Repowise test-quality markers, coverage, mutation results) and propose deletions and rewrites. Use when tests are not trusted or before refactoring a module."
 license: Apache-2.0
 metadata:
   author: fbhadha

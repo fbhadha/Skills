@@ -1,6 +1,6 @@
 ---
 name: py-health
-description: One report on where the repo is ugly and what to fix first: Repowise health, dead code, doc drift, test-quality markers, linter counts, optional mutation testing. Writes nothing. Use for cleanup planning.
+description: "One report on where the repo is ugly and what to fix first: Repowise health, dead code, doc drift, test-quality markers, linter counts, optional mutation testing. Writes nothing. Use for cleanup planning."
 license: Apache-2.0
 metadata:
   author: fbhadha

@@ -1,6 +1,6 @@
 ---
 name: pack-data-engineering
-description: Knowledge pack for data engineering repos (dlt, pandas, polars, pyarrow, SQLAlchemy, DuckDB, dbt, pandera): shapes, canonical repo, extra checks, faults, tests. Reference only; selected by py-intake.
+description: "Knowledge pack for data engineering repos (dlt, pandas, polars, pyarrow, SQLAlchemy, DuckDB, dbt, pandera): shapes, canonical repo, extra checks, faults, tests. Reference only; selected by py-intake."
 license: Apache-2.0
 metadata:
   author: fbhadha
