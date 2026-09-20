@@ -22,6 +22,9 @@
     "./skills/ask-dev",
     "./skills/py-design",
     "./skills/py-baseline",
-    "./skills/py-intake"
+    "./skills/py-intake",
+    "./skills/py-implement",
+    "./skills/py-review",
+    "./skills/py-test-audit"
   ]
 }

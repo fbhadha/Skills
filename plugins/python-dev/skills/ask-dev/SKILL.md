@@ -23,7 +23,8 @@ You don't remember every skill, so ask. This is the router over four layers: Mat
 | The situation | Next step | Then |
 |---|---|---|
 | Repo not set up (no `docs/agents/mode.md`) | `py-intake` | It explores, sets the mode and tracker, installs the baseline, indexes with Repowise, orients and grills on brownfield, writes the docs. |
-| An idea or feature, in a repo | `grill-with-docs` (Matt's) | Small enough for one session: `py-implement`. Bigger: `to-spec`, then `to-tickets`, then `py-implement` per ticket in a fresh window, then `py-review`. |
+| An idea or feature, in a repo | `grill-with-docs` (Matt's) | Small enough for one session: `py-implement` here. Bigger: `to-spec`, then `handoff` and a fresh session; `to-tickets`, then `handoff` and a fresh session; `py-implement` one ticket per session, each ending in `py-review` and a `handoff` for the next. |
+| A message that is a handoff document path | read it, then `AGENTS.md` | Continue with the skill the document suggests; never re-ask what it answers. |
 | A ticket already exists | `py-implement <ticket>` | It names the shape, checks scope, builds test-first, runs `py-review`, commits. |
 | A branch to review | `py-review <fixed-point>` | Standards, Spec and Craft axes, report first, fixes on request. |
 | Something is broken | describe the bug; the agent reaches for `diagnosing-bugs` | It builds a red-capable loop before any theory. |

@@ -1,7 +1,6 @@
 ---
 name: py-intake
 description: Set up a Python repo for the python-dev agent, or re-orient in one. Detects greenfield or brownfield, the git remote, the toolchain and ADK; applies the baseline; indexes with Repowise; on an existing repo reads what Repowise found back to the user in plain words and grills them on the undocumented decisions; writes the docs a junior reader needs; wires the harness shells. Idempotent and resumable. Also `py-intake later` to review the "not now" list.
-disable-model-invocation: true
 license: Apache-2.0
 metadata:
   author: fbhadha

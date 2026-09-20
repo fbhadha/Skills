@@ -48,6 +48,15 @@ Blocked outright by a hook, no asking possible: force-push, hard reset, history 
 
 Unattended runs are allowed only on a ticket that came out of a grilled spec, and they end in a pull request with before-and-after evidence, never a merge. With no human present, stop at any one-way door and write the question into the PR body.
 
+## Session boundaries
+
+A context window is a budget. Two of Matt's flows end where the next one should start fresh:
+
+- After `to-spec` has published the spec, and after `to-tickets` has published the tickets: do not start the next step here. Run `handoff` (open its file with `find_skill.py` as above) with the argument naming what the next session is for ("implement ticket 3 of the invoice-export spec", "break the invoice-export spec into tickets"). The document must carry: the ticket or spec id and where it lives, the branch, the how-to and shape agreed, the seams agreed for tests, the terms from `CONTEXT.md` that matter, the ADRs that govern the files, the commands to run, and the suggested skills (`py-implement` for a ticket; `to-tickets` for a spec). Then say: "Open a new session in this repo and paste the path of that document as your first message." Stop.
+- One ticket per session for `py-implement`. When a ticket is done and reviewed, hand off the same way before the next.
+
+A fresh session that starts with a handoff path reads it first, then `AGENTS.md`, and continues without re-asking what the document answers.
+
 ## Tests
 
 Tests are written before the code they test, at a seam agreed with the user; call the Skill tool with "tdd" for the loop. While going from red to green, existing tests are read-only: never loosen an assertion, delete a test, or add a skip to get green. Expected values come from a spec or a worked example, never recomputed the way the code computes them. Mock only at system boundaries.
