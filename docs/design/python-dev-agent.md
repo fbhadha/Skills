@@ -84,22 +84,27 @@ This repository already has that manifest (`.claude-plugin/marketplace.json` and
 
 ## 10. `py-health`: the deterministic bad-code suite
 
-Nothing published does this as one tool, but the pieces are mature and each is a pass/fail command. `py-health` wires them together, runs them, and writes one report with a score per axis and the worst offenders by file. It is the numeric half of the brownfield orientation and the thing the mentor persona points at when it says "this file is the problem".
+Two layers, split by what each needs to see. Whole-repo signals come from **Repowise** (verified in `docs/research/repowise.md`): it builds the dependency graph and git history once and scores every file from 49 deterministic markers calibrated against a defect corpus, with no model and no network. Line-level signals come from the established Python linters, which are instant on staged files and precise to the line. `py-health` runs both and writes one report: the Repowise score and its worst files, then the linter counts.
 
 | Axis | Tool | What it catches |
 |---|---|---|
-| Lint, style, common bugs, security smells | `ruff` with the fault-catalogue rule set (`B`, `S`, `BLE`, `C90`, `PL`, `T20`, `ERA`, `D`, `PT`, `SIM`, `RET`, `ARG`) | Mutable defaults, blind excepts, prints, commented-out code, complexity, unused arguments, test smells. |
-| Complexity and maintainability | `radon` (cyclomatic complexity, maintainability index) gated by `xenon` | The 10k-line file scores as F; functions over a threshold fail. |
-| Dead code | `vulture` | Unused functions, classes, imports, variables. |
-| Duplication | `pylint --disable=all --enable=duplicate-code` or `jscpd` | Near-duplicate blocks across files. |
-| Security | `bandit` | Hard-coded secrets, injection, unsafe deserialisation. |
+| Health score, ranking, refactoring targets | `repowise health`, `--refactoring-targets`, `--trend` | Nesting, brain methods, god classes, low cohesion (LCOM4), I/O in loops across function boundaries, churn and ownership risk, untested hotspots once coverage is ingested. |
+| Duplication | `repowise health` (`dry_violation`) | Near-duplicate blocks across files. |
+| Dead code | `repowise dead-code --safe-only` | Modules nothing imports; unused exports are shown but never fail a run. |
+| Test hygiene | `repowise health --format json`, advisory dimension (`assertion_free_test`, `mock_saturated_test`) | A test that runs code and checks nothing; a test that is mostly mock setup. |
+| Change gate (CI) | `scripts/repowise_gate.py` over `ChangeReviewService` | The diff introduced a new health finding on a file it touched. Exit non-zero. The CLI cannot do this; the Python API can. |
+| Lint, common bugs, prompt-shaped text | `ruff` with the fault-catalogue rule set | Mutable defaults, blind excepts, prints, commented-out code, TODOs without an owner, "This function" docstrings, boolean flags, banned `utils` imports. |
+| Size | `pylint --enable=too-many-lines` | Modules over 400 lines (tests 150). Repowise has no file-length marker. |
 | Architecture | `import-linter` layers contract | Domain importing adapters, cycles, entrypoints bypassing the application layer. |
 | Types | `mypy --strict` error count | `Any` leakage, untyped surfaces. |
-| Test strength | `mutmut` (mutation testing) | The direct answer to fake tests: it edits the code (flips a `<` to `<=`, deletes a line) and re-runs the suite. A test that still passes never tested anything. Survivor rate is the score. |
-| Test hygiene | custom gate | Tests with no assertion, assertion-free `pass` bodies, `skip` markers without a reason, prompt-shaped comments in test bodies. |
-| Size | custom gate | Modules over N lines, functions over M lines, files named `utils`/`helpers`/`common`/`misc`. |
+| Security | `bandit`, `detect-secrets` | Hard-coded secrets, injection, unsafe deserialisation. Repowise's own security layer is a 16-pattern floor and its doc says to run a real SAST. |
+| Test strength | `mutmut` (mutation testing) | The direct answer to fake tests: it edits the code and re-runs the suite. A test that still passes never tested anything. Survivor rate is the score. |
 
-Mutation testing is slow, so it runs on demand and on a schedule, not on every commit. Everything else runs in pre-commit on changed files and in CI on the whole repo.
+Retired from the earlier draft: radon and xenon (the Repowise score supersedes them), vulture (Repowise dead code), and every custom gate. Nothing in the suite is code we maintain except the 40-line change-gate script.
+
+Mutation testing is slow, so it runs on demand and on a schedule. Repowise indexes in under ten seconds on the repos tried and runs in CI once per pipeline. Everything else runs in pre-commit on changed files.
+
+Constraints that shape the baseline: Repowise is AGPL-3.0 (free for internal use; the gate script imports it, so it stays a development script and never ships inside a product), needs Python 3.11, phones home unless `DO_NOT_TRACK=1`, and by default writes editor config outside the repo, so every scripted call passes `--no-editor-setup`.
 
 ## 11. The canonical examples, and why these three
 
@@ -223,6 +228,10 @@ fbhadha/Skills/
 | 13 | Test in your real GitLab environment; you report back. No synthetic fixture repo here. | Skills go to you checked only for loading and for their commands running. |
 | 14 | **Short persona, deep library.** The persona is about a page of identity, voice, rules, and pointers; expertise lives in `py-design`, the packs, Matt's skills, and the checks. | See §13.4. |
 | 15 | Portability as in §13: Claude Code is the reference experience, Copilot second, Codex the always-on `AGENTS.md` version. One plugin directory, three loaders. | Releases are version bumps. |
+| 16 | **No Claude-Code-only feature ships without its repo-level fallback in the same change.** | Every skill carries its Copilot and Codex behaviour up front. |
+| 17 | **`adk-migrate`: detect all 1.x patterns mechanically, force only what silently breaks on 2.x** (broad `except` in tools, direct event appends, ignored `run` overrides, rigid custom session stores) with hard pushback, **ticket the deprecated shells as `later`**, one agent per ticket as expand → migrate → contract with an ADK eval written first if none exists. | A repo with no evals gets "write the evals" as its first migration ticket. |
+| 18 | **Repowise owns the whole-repo and change-level checks; per-line linters own the commit gate.** Repowise: health score, duplication, dead code, assertion-free tests, the CI change gate, brownfield orientation, decision records. Linters: ruff, pylint `too-many-lines`, mypy, import-linter, bandit, detect-secrets, mutmut. See `docs/research/repowise.md`. | radon, xenon, vulture and every custom gate are dropped. AGPL, `DO_NOT_TRACK=1`, `--no-editor-setup` are baked into the templates. |
+| 19 | **No custom gates at all.** The last candidate (a test with no assertion) is Repowise's `assertion_free_test`. The only code we maintain in the check suite is the change-gate script over Repowise's Python API. | Q18 closed. |
 
 ## 15. Build order
 
