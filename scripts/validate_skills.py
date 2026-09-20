@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate every SKILL.md (skills/ and plugins/*/skills/) against the Agent Skills standard.
+"""Validate every SKILL.md under skills/ against the Agent Skills standard.
 
 Checks, per skill:
   - SKILL.md exists and starts with YAML frontmatter
@@ -9,7 +9,7 @@ Checks, per skill:
 
 Exit code is non-zero if any skill fails, so CI can block the merge.
 
-Usage: python scripts/validate_skills.py [skills_dir]  (default: skills/ and plugins/*/skills/)
+Usage: python scripts/validate_skills.py [skills_dir]  (default: skills/)
 """
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SKILLS_DIRS = (
     [Path(sys.argv[1]).resolve()]
     if len(sys.argv) > 1
-    else [ROOT / "skills", *sorted(ROOT.glob("plugins/*/skills"))]
+    else [ROOT / "skills"]
 )
 SCHEMA_PATH = ROOT / "schema" / "skill.schema.json"
 

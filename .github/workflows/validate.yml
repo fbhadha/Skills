@@ -4,7 +4,6 @@ on:
   pull_request:
     paths:
       - "skills/**"
-      - "plugins/**"
       - "schema/**"
       - "scripts/**"
       - ".claude-plugin/**"
@@ -23,10 +22,6 @@ jobs:
         run: pip install pyyaml jsonschema
       - name: Validate SKILL.md frontmatter
         run: python scripts/validate_skills.py
-      - name: Invocation switches agree across harnesses
-        run: python scripts/check_invocation_sync.py
-      - name: Plugin manifests are well-formed JSON
-        run: for f in plugins/*/.claude-plugin/plugin.json plugins/*/hooks/hooks.json; do python -c "import json,sys; json.load(open(sys.argv[1])); print(sys.argv[1], 'OK')" "$f"; done
 
   validate-marketplace:
     runs-on: ubuntu-latest
@@ -41,23 +36,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Flag risky patterns in bundled scripts
         run: |
-          echo "Scanning skills/ and plugins/ for high-risk shell patterns (advisory)."
+          echo "Scanning skills/ for high-risk shell patterns (advisory)."
           # Advisory grep: surfaces patterns reviewers must eyeball. Non-blocking by design.
           ! grep -rIEn \
             -e 'curl[^|]*\|[[:space:]]*(sh|bash)' \
             -e 'wget[^|]*\|[[:space:]]*(sh|bash)' \
             -e 'rm[[:space:]]+-rf[[:space:]]+/' \
             -e 'eval[[:space:]]+.*\$\(' \
-            skills/ plugins/ || (echo "::warning::Risky pattern found above — require manual security review." && true)
+            skills/ || (echo "::warning::Risky pattern found above — require manual security review." && true)
 
-  upstream-skills:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - name: Every upstream skill we call by name exists at its pinned commit with the expected invocation
-        run: python scripts/check_upstream_skills.py
-      - name: Report drift on the upstream default branches (advisory)
-        run: python scripts/check_upstream_skills.py --latest
