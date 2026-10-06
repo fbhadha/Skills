@@ -23,7 +23,9 @@
         "./skills/grill-me",
         "./skills/writing-partner",
         "./skills/linkedin-post",
-        "./skills/adversarial-review-engine"
+        "./skills/adversarial-review-engine",
+        "./skills/revise-ai-draft",
+        "./skills/revise-ai-draft-small"
       ]
     }
   ]
