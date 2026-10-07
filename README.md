@@ -30,9 +30,9 @@ The `python-dev` agent, a senior Python engineer as a selectable agent, used to 
 | [`writing-partner`](skills/writing-partner/) | An opinionated developmental editor and brainstorm partner that pushes hard on throughline, momentum, and craft, holds its own judgment under pushback, and never overrides what you mean to say. |
 | [`linkedin-post`](skills/linkedin-post/) | Writes a publish-ready LinkedIn post in your voice, tuned to current LinkedIn norms, with a hook-first structure, an AI-tell pass, and per-topic hashtag research. |
 | [`adversarial-review-engine`](skills/adversarial-review-engine/) | Two modes of ruthless critical analysis: dismantles someone else's writing as a hostile peer-reviewer (Kill List, steelman, verdicts, concessions), or plays devil's advocate against your own position — surfacing the strongest objections, then hardening and restating it at full strength. |
-
 | [`revise-ai-draft`](skills/revise-ai-draft/) | Revises any AI-written draft so it reads as human-written where readers and detectors notice (what is included, in what order, how it ends, who is speaking, what gets named), then fixes the words. Built from two 2026 studies showing AI text stays identifiable from structure after rewording. |
 | [`revise-ai-draft-small`](skills/revise-ai-draft-small/) | Executable spec for a small or local model (3B to 14B via Ollama or ADK) that revises AI-written drafts with deterministic delete, rewrite, and word tables. Ships `scripts/revise.py` (runs the rules through Ollama step by step) and `scripts/lint_output.py`. |
+| [`brain-dump-cleanup`](skills/brain-dump-cleanup/) | Rewrites brain dumps and dictated or speech-to-text messages as clear, shorter text in the speaker's own voice: cuts fillers, resolves self-corrections, honours spoken formatting cues, and asks about misheard words instead of guessing. Skips any message that asks Claude to do something. |
 
 <!-- Add a row per skill. When the catalog grows past ~50, switch to category folders + a generated index. -->
 

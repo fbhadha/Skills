@@ -25,7 +25,8 @@
         "./skills/linkedin-post",
         "./skills/adversarial-review-engine",
         "./skills/revise-ai-draft",
-        "./skills/revise-ai-draft-small"
+        "./skills/revise-ai-draft-small",
+        "./skills/brain-dump-cleanup"
       ]
     }
   ]
