@@ -67,9 +67,9 @@ After the cleanup, apply the `revise-ai-draft` skill to the result to remove AI-
 ## Examples
 
 INPUT:
-um so the thing with the GE rollout is like people don't really use it because they don't know what it's for and uh we need to fix that so I'm thinking training, a FAQ page, and like office hours or something
+um so the thing with the new wiki rollout is like people don't really use it because they don't know what it's for and uh we need to fix that so I'm thinking training, a FAQ page, and like office hours or something
 OUTPUT:
-People aren't using GE because they don't know what it's for. We need to fix that. I'm thinking:
+People aren't using the new wiki because they don't know what it's for. We need to fix that. I'm thinking:
 - Training
 - An FAQ page
 - Office hours
