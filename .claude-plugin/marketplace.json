@@ -26,7 +26,8 @@
         "./skills/adversarial-review-engine",
         "./skills/revise-ai-draft",
         "./skills/revise-ai-draft-small",
-        "./skills/brain-dump-cleanup"
+        "./skills/brain-dump-cleanup",
+        "./skills/workflow-breakdown"
       ]
     }
   ]

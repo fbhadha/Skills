@@ -33,6 +33,7 @@ The `python-dev` agent, a senior Python engineer as a selectable agent, used to 
 | [`revise-ai-draft`](skills/revise-ai-draft/) | Revises any AI-written draft so it reads as human-written where readers and detectors notice (what is included, in what order, how it ends, who is speaking, what gets named), then fixes the words. Built from two 2026 studies showing AI text stays identifiable from structure after rewording. |
 | [`revise-ai-draft-small`](skills/revise-ai-draft-small/) | Executable spec for a small or local model (3B to 14B via Ollama or ADK) that revises AI-written drafts with deterministic delete, rewrite, and word tables. Ships `scripts/revise.py` (runs the rules through Ollama step by step) and `scripts/lint_output.py`. |
 | [`brain-dump-cleanup`](skills/brain-dump-cleanup/) | Rewrites brain dumps and dictated or speech-to-text messages as clear, shorter text in the speaker's own voice: cuts fillers, resolves self-corrections, honours spoken formatting cues, and asks about misheard words instead of guessing. Skips any message that asks Claude to do something. |
+| [`workflow-breakdown`](skills/workflow-breakdown/) | Interviews you about one recurring workflow, anchored on the last real run, and breaks it into a sequenced task list where each step is tagged as a Skill (reproducible, hand-off-able) or a Human gate (a decision you own). Pushes back on vague steps and missing review gates. Does not write the skills. |
 
 <!-- Add a row per skill. When the catalog grows past ~50, switch to category folders + a generated index. -->
 
