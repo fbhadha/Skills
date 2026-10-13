@@ -27,7 +27,8 @@
         "./skills/revise-ai-draft",
         "./skills/revise-ai-draft-small",
         "./skills/brain-dump-cleanup",
-        "./skills/workflow-breakdown"
+        "./skills/workflow-breakdown",
+        "./skills/skill-writing-interview"
       ]
     }
   ]
